@@ -5,21 +5,21 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { LINK_API } from '../../utils/config.json';
+import { showFormatDatatable, isNew } from '../../utils/dataMenu';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { LINK_API } from '../../utils/config.json';
-import { showFormatDatatable } from '../../utils/dataMenu';
-import CloseIcon from '@mui/icons-material/Close';
 
 
 // STYLING
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-import { Box, Button, Grid, IconButton } from "@mui/joy";
+import { Box, Button, Grid, IconButton, Tooltip } from "@mui/joy";
 import { InputText } from "primereact/inputtext";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import ButtonAction from "./ButtonAction";
 import { Tag } from "primereact/tag";
+import ModalEditManhwa from "../modal/ModalEditManhwa";
 
 function DatatablesManhwa({ isProfile }) {
   const [isData, setIsData] = useState(null)
@@ -47,6 +47,8 @@ function DatatablesManhwa({ isProfile }) {
       ]
     },
   })
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isClickData, setIsClickData] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -145,9 +147,44 @@ function DatatablesManhwa({ isProfile }) {
     return (
       <>
         {(isProfile.displayId === data.user.displayId) ? 
-          <ButtonAction 
-            data={data}
-          /> 
+        <>
+          <Grid
+            container
+            spacing={2}
+          >
+            <Grid
+              item="true"
+              xs={6}
+            >
+              <Tooltip title="Edit" variant="soft" color="warning">
+                <IconButton
+                  variant="plain"
+                  color="primary"
+                  onClick={() => {
+                    setIsOpenModal(true);
+                    setIsClickData(data);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid
+              item="true"
+              xs={6}
+            >
+              <Tooltip title="Delete" variant="soft" color="danger">
+                <IconButton
+                  variant="plain"
+                  color="danger"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+
+        </>
           : <Tag 
               icon={<CloseIcon />}
               className="mr-2"
@@ -159,10 +196,30 @@ function DatatablesManhwa({ isProfile }) {
     )
   }
 
+  const tagIsNewTemplate = (data) => {
+    const isNewFunc = (isNew(data.isNew) === 'Yes') ? 'success' : 'danger';
+    return (
+      <Tag 
+        className="mr-2"
+        value={isNew(data.isNew)}
+        severity={isNewFunc}
+      />
+    )
+  }
+
   const value = isFilter["global"] ? isFilter["global"].value : "";
-  console.log();
+
   return (
     <>
+      {(isClickData !== null) ? (
+        <>
+          <ModalEditManhwa 
+            isOpenModal={isOpenModal}
+            setIsOpenModal={setIsOpenModal}
+            isDataModal={isClickData}
+          />
+        </>
+      ) : ''}
       <PrimeReactProvider>
         <Box
           sx={{
@@ -191,6 +248,22 @@ function DatatablesManhwa({ isProfile }) {
                     fontSize: '14px'
                   }}
                 />
+                {/* BUTTON JUST ME */}
+                <Button 
+                  sx={{
+                    marginLeft: '10px'
+                  }}
+                  color="warning"
+                  variant="soft"
+                  onClick={() => {
+                    let _filters = { ...isFilter };
+
+                    _filters['global'].value = isProfile.displayUsername;
+                    setIsFilter(_filters); 
+                  }}
+                >
+                  Just Me!
+                </Button>
               </span>
             </Grid>
             <Grid
@@ -223,6 +296,7 @@ function DatatablesManhwa({ isProfile }) {
                   footer="Title"
                   sortable
                   filter
+                  filterPlaceholder="Search..."
                   style={{ width: '25%', fontWeight: 'bold', fontSize: '14px' }}
                 />
                 <Column 
@@ -230,7 +304,7 @@ function DatatablesManhwa({ isProfile }) {
                   header="Total Chp & Lang"
                   footer="Total Chp & Lang"
                   body={totalChpAndLang}
-                  style={{ width: '25%' }}
+                  style={{ width: '25%', fontSize: '14px' }}
                 />
                 <Column
                   field="user.displayUsername"
@@ -238,7 +312,15 @@ function DatatablesManhwa({ isProfile }) {
                   footer="Staff"
                   filter
                   sortable
-                  style={{ width: '25%' }}
+                  style={{ width: '25%', fontWeight: 'bold',  fontSize: '14px' }}
+                />
+                <Column 
+                  field="isNew"
+                  header="Is New?"
+                  footer="Is New?"
+                  sortable
+                  body={tagIsNewTemplate}
+                  style={{ fontSize: '14px' }}
                 />
                 <Column 
                   field="insertedAt"
@@ -246,7 +328,7 @@ function DatatablesManhwa({ isProfile }) {
                   footer="Date Input"
                   sortable
                   body={dateInsertedAt}
-                  style={{ width: '25%' }}
+                  style={{ width: '25%', fontSize: '14px' }}
                 />
                 <Column 
                   header="Link"

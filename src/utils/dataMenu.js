@@ -33,3 +33,12 @@ export function showFormatDatatable(date) {
 
   return `${year}-${month}-${day}`;
 }
+
+export function isNew(isNew) {
+  switch (isNew) {
+    case 1:
+      return 'Yes';
+    case "0":
+      return 'No';
+  }
+}
