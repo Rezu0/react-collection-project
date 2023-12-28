@@ -287,7 +287,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               variant="outlined"
               sx={{
                 width: '100%',
-                maxWidth: 800,
+                maxWidth: 1000,
                 borderRadius: 'md',
                 p: 3,
                 boxShadow: 'lg',
@@ -301,7 +301,10 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                 sx={{ m: 1 }}
               />
 
-              <DatatablesManhwa isProfile={isProfile} />
+              <DatatablesManhwa 
+                isProfile={isProfile}
+                setIsProfile={setIsProfile}
+              />
             </Sheet>
           </Modal>
         </>

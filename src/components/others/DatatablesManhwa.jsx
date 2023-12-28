@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import { Tag } from "primereact/tag";
 import ModalEditManhwa from "../modal/ModalEditManhwa";
 
-function DatatablesManhwa({ isProfile }) {
+function DatatablesManhwa({ isProfile, setIsProfile }) {
   const [isData, setIsData] = useState(null)
   const [isFilter, setIsFilter] = useState({
     global: {
@@ -217,6 +217,7 @@ function DatatablesManhwa({ isProfile }) {
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
             isDataModal={isClickData}
+            setIsProfile={setIsProfile}
           />
         </>
       ) : ''}
