@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { Tag } from "primereact/tag";
 import ModalEditManhwa from "../modal/ModalEditManhwa";
+import DialogDeleteManhwa from "../modal/DialogDeleteManhwa";
 
 function DatatablesManhwa({ isProfile, setIsProfile }) {
   const [isData, setIsData] = useState(null)
@@ -48,6 +49,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
     },
   })
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [isClickData, setIsClickData] = useState(null);
 
   useEffect(() => {
@@ -177,6 +179,10 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <IconButton
                   variant="plain"
                   color="danger"
+                  onClick={() => {
+                    setIsOpenDelete(true)
+                    setIsClickData(data)
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -211,6 +217,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
 
   return (
     <>
+      {/* INI MODAL UNTUK EDIT INFORMATION DATA */}
       {(isClickData !== null) ? (
         <>
           <ModalEditManhwa 
@@ -221,6 +228,19 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
           />
         </>
       ) : ''}
+
+      {/* INI MODAL UNTUK DIALOG DELETE INFORMATION DATA */}
+      {(isClickData !== null) ? (
+        <>
+          <DialogDeleteManhwa 
+            isOpenDelete={isOpenDelete}
+            setIsOpenDelete={setIsOpenDelete}
+            isData={isClickData}
+            setIsProfile={setIsProfile}
+          />
+        </>
+      ) : ''}
+
       <PrimeReactProvider>
         <Box
           sx={{
