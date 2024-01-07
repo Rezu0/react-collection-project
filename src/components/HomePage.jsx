@@ -1,5 +1,5 @@
 // Home.js
-import { Box, Button, FormControl, FormLabel, Grid, Input, Tooltip, Typography, styled } from '@mui/joy';
+import { Box, Button, FormControl, FormLabel, Grid, Input, Modal, ModalClose, Option, Select, Sheet, Tooltip, Typography, styled } from '@mui/joy';
 import { Paper, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -29,12 +29,37 @@ const formatToCurrency = (value) => {
   }).format(value);
 };
 
+const dataVia = [
+  {
+    id: 1,
+    name: 'OVO'
+  },
+  {
+    id: 2,
+    name: 'DANA'
+  },
+  {
+    id: 3,
+    name: 'GOPAY'
+  },
+  {
+    id: 4,
+    name: 'Shopee Pay'
+  }
+];
+
 function HomePage({ isRoles, isDivision, setIsDivision }) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
   const [isProfile, setIsProfile] = useState(0);
   const [isInfoWihtdraw, setIsInfoWithdraw] = useState(0);
   const [isModalWithdraw, setIsModalWithdraw] = useState(false);
+  const [isLoadingWihtdraw, setIsLoadingWithdraw] = useState(false);
+  const [isFormWithdraw, setIsFormWithdraw] = useState({
+    userId: '',
+    via: '',
+    nomor: ''
+  });
 
   const upperCaseStatus = (text) => {
     return text?.charAt(0).toUpperCase() + text?.slice(1);
@@ -64,6 +89,10 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                 if (result.status === 'success') {
                   setIsProfile(result.data._user)
                   setIsDivision(result.data._user.divisi)
+                  setIsFormWithdraw((prevFormData) => ({
+                    ...prevFormData,
+                    userId: result.data._user.displayId,
+                  }));
                 }
               }
             }).catch((err) => {
@@ -107,6 +136,64 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
       }
     }
   }, [setIsInfoWithdraw])
+
+  const handleSelectVia = (event, newValue) => {
+    setIsFormWithdraw((prevFormData) => ({
+      ...prevFormData,
+      via: newValue
+    }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setIsFormWithdraw((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmitRequest = () => {
+    setIsLoadingWithdraw(true);
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    const headersSubmit = new Headers();
+    headersSubmit.append("Content-Type", "application/json");
+    headersSubmit.append("Authorization", `Bearer ${parseStorage._token}`);
+
+    const bodyRaw = JSON.stringify({
+      userId: isFormWithdraw?.userId,
+      amount: isProfile?.amount[0].amount,
+      via: isFormWithdraw?.via,
+      nomor: isFormWithdraw?.nomor
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: headersSubmit,
+      body: bodyRaw,
+      redirect: 'follow'
+    };
+
+    fetch(`${LINK_API}api/withdraw`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result.data);
+        setIsProfile(result.data._user);
+        setIsInfoWithdraw(result.data._withdraw);
+        
+        setTimeout(() => {
+          setIsModalWithdraw(false);
+          setIsLoadingWithdraw(false);
+          toast.success(result.message);
+        }, 2000);
+      }).catch((err) => {
+        toast.error('Terjadi kesalahan saat request withdraw');
+        setIsLoadingWithdraw(false);
+        console.error(err);
+      })
+  }
 
   return (
     <>
@@ -178,7 +265,11 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                         }}
                         className='button-tarik'
                         onClick={() => {
-                          setIsModalWithdraw(true)
+                          if (isInfoWihtdraw?.status == 'pending') {
+                            toast.warn('Request Withdraw sedang dilakukan!')
+                          }else {
+                            setIsModalWithdraw(true)
+                          }
                         }}
                       >
                         Withdraw
@@ -233,6 +324,7 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                   }}
                 >
                   {(isProfile === 0) ? 'Loading...' : 
+                    (isInfoWihtdraw?.status === 'pending') ? 
                     <>
                       <Typography
                         fontSize='13px'
@@ -275,8 +367,36 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                       >
                         {showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
                       </Typography>
+
+                      <Typography
+                        fontSize='13px'
+                        fontFamily='Titillium Web'
+                        sx={{
+                          backgroundColor: '#000000',
+                          padding: '3px 10px',
+                          borderRadius: '10px',
+                          margin: '0px 3px',
+                          color: '#ffffff'
+                        }}
+                      >
+                        {isInfoWihtdraw?.nomor}
+                      </Typography>
                     </>
-                  }
+                 : (
+                  <Typography
+                    fontSize='13px'
+                    color='#ffffff'
+                    fontFamily='Titillium Web'
+                    sx={{
+                      backgroundColor: 'limegreen',
+                      padding: '3px 10px',
+                      borderRadius: '10px',
+                      margin: '0px 3px'
+                    }}
+                  >
+                    Tidak ada Request
+                  </Typography>
+                 ) }
                 </Grid>
                 <Grid
                   item="true"
@@ -298,9 +418,7 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                     }}
                     className='button-status'
                   >
-                    {
-                      upperCaseStatus(isInfoWihtdraw?.status)
-                    }
+                    {(isInfoWihtdraw?.status == undefined) ? 'None' :  upperCaseStatus(isInfoWihtdraw?.status)}
                   </Button>
                   }
                 </Grid>
@@ -336,14 +454,120 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
         </Grid>
       </Box>
 
-      <Dialog
-        visible={isModalWithdraw}
-        style={{ width: '50vw' }}
-        header="Form Withdraw"
-        onHide={() => setIsModalWithdraw(false)}
+      <Modal
+        open={isModalWithdraw}
+        onClose={(event, reason) => {
+          if (reason && reason === 'backdropClick') {
+            return;
+          }
+          setIsModalWithdraw(false);
+        }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
       >
-        Ini adalah form untuk withdraw
-      </Dialog>
+        <Sheet
+          variant='outlined'
+          sx={{
+            width: '100%',
+            maxWidth: 700,
+            borderRadius: 'md',
+            p: 3,
+            boxShadow: 'lg'
+          }}
+        >
+          <ModalClose variant='plain' sx={{ m: 1 }} />
+          <form>
+            <FormLabel>
+              <h4>Amount Withdraw</h4>
+            </FormLabel>
+            <FormControl>
+              <Input 
+                type='text'
+                size='md'
+                name='amount'
+                variant='soft'
+                value={(isProfile !== 0) ? formatToCurrency(isProfile?.amount[0].amount) : 'Loading...'}
+                disabled
+                autoComplete='Amount'
+              />
+            </FormControl>
+
+            <Grid
+              container
+              spacing={2}
+            >
+              <Grid
+                item="true"
+                md={6}
+                xs={6}
+              >
+                <FormLabel>
+                  <h4>Via</h4>
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    placeholder="Choose one..."
+                    name='via'
+                    variant='soft'
+                    value={isFormWithdraw?.via}
+                    style={{ zIndex: 1100 }}
+                    onChange={handleSelectVia}
+                  >
+                    {dataVia.map((via) => (
+                      <Option
+                        key={via.id}
+                        value={via.name}
+                      >
+                        {via.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                item="true"
+                md={6}
+                xs={6}
+              >
+                <FormLabel>
+                  <h4>Nomor</h4>
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    type='number'
+                    name='nomor'
+                    placeholder='Your Number...'
+                    variant='soft'
+                    value={isFormWithdraw?.nomor}
+                    autoComplete='Nomor'
+                    onChange={handleInputChange}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid
+                item="true"
+                md={12}
+                xs={12}
+              >
+                <Button
+                  variant='solid'
+                  color='success'
+                  fullWidth
+                  onClick={handleSubmitRequest}
+                  loading={isLoadingWihtdraw}
+                >
+                  Request
+                </Button>
+              </Grid>
+            </Grid>
+        </form>
+        </Sheet>
+      </Modal>
       
       <ToastContainer
           theme='dark'

@@ -129,7 +129,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
             </FormLabel>
             <FormControl>
               <Input
-                type="'text"
+                type="text"
                 placeholder="Example: Queen Bee - ( 290 )"
                 size="md"
                 name="title"
