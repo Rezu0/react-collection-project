@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { LINK_API } from '../../utils/config.json';
 import DatatablesManhwa from "./DatatablesManhwa";
+import InputForDoujin from "./InputForDoujin";
 
 function InputProject({ isDivision, isProfile, setIsProfile }) {
   const [isFormData, setIsFormData] = useState({
@@ -309,9 +310,10 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
           </Modal>
         </>
         : (isDivision === 'doujin') ? 
-        <p>
-          Doujin
-        </p> : isDivision
+        <InputForDoujin 
+          isProfile={isProfile}
+          setIsProfile={setIsProfile}
+        /> : isDivision
       }
     </>
   )
