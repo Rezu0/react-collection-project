@@ -1,7 +1,10 @@
-import { Button, FormControl, FormLabel, Grid, Input, Option, Select, Textarea } from "@mui/joy";
+import { Button, FormControl, FormLabel, Grid, Input, Modal, ModalClose, Option, Select, Sheet, Textarea } from "@mui/joy";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { LINK_API } from '../../utils/config.json';
+import { toast } from "react-toastify";
+import DatatablesDoujin from "./DatatablesDoujin";
 
 const optionsLang = [
   {
@@ -17,6 +20,8 @@ const optionsLang = [
 ];
 
 function InputForDoujin({ isProfile, setIsProfile }) {
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+  const [isModalDoujin, setIsModalDoujin] = useState(false);
   const [isFormDoujin, setIsFormDoujin] = useState({
     userId: '',
     title: '',
@@ -46,6 +51,57 @@ function InputForDoujin({ isProfile, setIsProfile }) {
       ...prevFormData,
       lang: newValue
     }));
+  }
+
+  const handleSubmit = () => {
+    setIsLoadingSubmit(true)
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    const headersSubmit = new Headers();
+    headersSubmit.append("Content-Type", "application/json");
+    headersSubmit.append("Authorization", `Bearer ${parseStorage._token}`);
+
+    try {
+      const rawBody = JSON.stringify(isFormDoujin);
+      const optionsSubmit = {
+        method: 'POST',
+        headers: headersSubmit,
+        body: rawBody,
+        redirect: 'follow'
+      };
+
+      fetch(`${LINK_API}api/doujin`, optionsSubmit)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.data) {
+            setIsProfile(result.data._user)
+            setIsFormDoujin(() => ({
+              userId: '',
+              title: '',
+              link: '',
+              totalPage: 1,
+              lang: null
+            }));
+
+            setTimeout(() => {
+              toast.success(result.message);
+              setIsLoadingSubmit(false);
+            }, 2000)
+          } else {
+            setIsLoadingSubmit(false);
+            toast.error(result.message);
+          }
+          
+        }).catch((err) => {
+          setIsLoadingSubmit(false);
+          toast.error('Terjadi kesalahan saat submit ')
+        })
+    } catch (err) {
+      setIsLoadingSubmit(false);
+      toast.error('error di try');
+      console.error(err);
+    }
   }
 
   return (
@@ -172,10 +228,69 @@ function InputForDoujin({ isProfile, setIsProfile }) {
             variant="solid"
             fullWidth
             color="success"
+            onClick={handleSubmit}
+            loading={isLoadingSubmit}
           >
             Submit Project
           </Button>
         </Grid>
+
+        <Grid
+          item="true"
+          md={12}
+          xs={12}
+        >
+          <Button
+            color="primary"
+            variant="solid"
+            onClick={() => {
+              setIsModalDoujin(true);
+            }}
+          >
+            Show table
+          </Button>
+        </Grid>
+
+        {/* MODAL DATATABLE */}
+        <Modal
+          aria-labelledby="modal-title"
+          aria-describedby="modal-desc"
+          open={isModalDoujin}
+          onClose={(event, reason) => {
+            if (reason && reason === 'backdropClick') {
+              return;
+            }
+            setIsModalDoujin(false)
+          }}
+          sx={{
+            zIndex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Sheet
+            variant="outlined"
+            sx={{
+              width: '100%',
+              maxWidth: 1000,
+              borderRadius: 'md',
+              p: 3,
+              boxShadow: 'lg',
+              height: 'auto'
+            }}
+          >
+            <ModalClose 
+              variant="plain"
+              sx={{ m: 1 }}
+            />
+
+            <DatatablesDoujin 
+              isProfile={isProfile}
+              setIsProfile={setIsProfile}
+            />
+          </Sheet>
+        </Modal>
       </Grid>
     </>
   )
