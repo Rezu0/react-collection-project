@@ -16,6 +16,7 @@ import { Tag } from "primereact/tag";
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { Delete } from "@mui/icons-material";
+import ModalEditDoujin from "../modal/ModalEditDoujin";
 
 function DatatablesDoujin({ isProfile, setIsProfile }) {
   const [isDataTable, setIsDataTable] = useState();
@@ -42,7 +43,9 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
         }
       ]
     },
-  })
+  });
+  const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
+  const [isDataEdit, setIsDataEdit] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -173,7 +176,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                     variant="plain"
                     color="primary"
                     onClick={() => {
-
+                      setIsOpenModalEdit(true);
+                      setIsDataEdit(data);
                     }}
                   >
                     <EditIcon />
@@ -218,6 +222,17 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
 
   return (
     <>
+      {(isDataEdit != null) ? (
+        <>
+          <ModalEditDoujin 
+            isOpenModalEdit={isOpenModalEdit}
+            setIsOpenModalEdit={setIsOpenModalEdit}
+            isDataEdit={isDataEdit}
+            setIsDataEdit={setIsDataEdit}
+          />
+        </>
+      ) : ''}
+
       <Box
         sx={{
           flexGrow: 1
