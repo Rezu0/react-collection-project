@@ -17,6 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { Delete } from "@mui/icons-material";
 import ModalEditDoujin from "../modal/ModalEditDoujin";
+import DialogDeleteDoujin from "../modal/DialogDeleteDoujin";
 
 function DatatablesDoujin({ isProfile, setIsProfile }) {
   const [isDataTable, setIsDataTable] = useState();
@@ -46,6 +47,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
   });
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isDataEdit, setIsDataEdit] = useState(null);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -197,7 +199,10 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                   <IconButton
                     variant="plain"
                     color="danger"
-                    onClick={() => {}}
+                    onClick={() => {
+                      setIsOpenDelete(true)
+                      setIsDataEdit(data);
+                    }}
                   >
                     <Delete />
                   </IconButton>
@@ -222,6 +227,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
 
   return (
     <>
+      {/* INI MODAL UNTUK EDIT DOUJIN */}
       {(isDataEdit != null) ? (
         <>
           <ModalEditDoujin 
@@ -229,6 +235,18 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             setIsOpenModalEdit={setIsOpenModalEdit}
             isDataEdit={isDataEdit}
             setIsProfile={setIsProfile}
+          />
+        </>
+      ) : ''}
+
+      {/* INI MODAL UNTUK DIALOG HAPUS DOUJIN */}
+      {(isDataEdit != null) ? (
+        <>
+          <DialogDeleteDoujin 
+            isOpenDelete={isOpenDelete}
+            setIsOpenDelete={setIsOpenDelete}
+            isDataDelete={isDataEdit}
+            setIsProfie={setIsProfile}
           />
         </>
       ) : ''}
