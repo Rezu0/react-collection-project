@@ -77,7 +77,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
         }
       }
     }
-  }, [setIsDataTable, setIsProfile]);
+  }, [setIsDataTable, isProfile]);
 
   const onGlobalFilterChange = (event) => {
     const value = event.target.value;
@@ -228,7 +228,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             isOpenModalEdit={isOpenModalEdit}
             setIsOpenModalEdit={setIsOpenModalEdit}
             isDataEdit={isDataEdit}
-            setIsDataEdit={setIsDataEdit}
+            setIsProfile={setIsProfile}
           />
         </>
       ) : ''}

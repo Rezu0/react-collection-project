@@ -4,18 +4,86 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
+import { LINK_API } from '../../utils/config.json';
+import { toast } from "react-toastify";
 
 function ModalEditDoujin({ 
   isOpenModalEdit,
   setIsOpenModalEdit,
   isDataEdit,
-  setIsDataEdit
+  setIsProfile
 }) {
   const [isFormData, setIsFormData] = useState(null);
+  const [isLoadingEditBtn, setIsLoadingEditBtn] = useState(false);
 
   useEffect(() => {
     setIsFormData(isDataEdit);
   }, [setIsFormData, isDataEdit])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setIsFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  };
+
+  const handleSelectLang = (event, newValue) => {
+    setIsFormData((prevFormData) => ({
+      ...prevFormData,
+      lang: newValue,
+    }));
+  };
+
+  const onClickButtonEdit = () => {
+    setIsLoadingEditBtn(true);
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    const headersEdit = new Headers();
+    headersEdit.append("Content-Type", "application/json");
+    headersEdit.append("Authorization", `Bearer ${parseStorage._token}`);
+
+    try {
+      const rawData = JSON.stringify({
+        uuid: isFormData?.uuid,
+        title: isFormData?.title,
+        totalPage: isFormData?.totalPage,
+        lang: isFormData?.lang,
+        link: isFormData?.link
+      });
+
+      const requestOptions = {
+        method: 'PUT',
+        headers: headersEdit,
+        body: rawData,
+        redirect: 'follow'
+      };
+
+      fetch(`${LINK_API}api/doujin`, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.data) {
+            setIsProfile(result.data._user);
+
+            setTimeout(() => {
+              setIsOpenModalEdit(false)
+              setIsFormData(isDataEdit)
+              setIsLoadingEditBtn(false);
+              toast.success(result.message)
+            }, 2000)
+          }
+        }).catch((err) => {
+          setIsLoadingEditBtn(false);
+          toast.error('Edit doujin gagal!');
+          console.error(err);
+        })
+    } catch (err) {
+      setIsLoadingEditBtn(false);
+      console.error(err);
+    }
+  };
 
   const optionsLang = [
     {
@@ -28,7 +96,6 @@ function ModalEditDoujin({
     }
   ];
 
-  console.log(isFormData?.title);
   return (
     <>
       <Dialog
@@ -58,6 +125,7 @@ function ModalEditDoujin({
             variant="outlined"
             autoComplete="Title"
             value={isFormData?.title}
+            onChange={handleInputChange}
           />
         </FormControl>
 
@@ -74,6 +142,7 @@ function ModalEditDoujin({
             variant="outlined"
             value={isFormData?.link}
             autoComplete="Link"
+            onChange={handleInputChange}
           />
         </FormControl>
 
@@ -99,6 +168,7 @@ function ModalEditDoujin({
                 variant="soft"
                 value={isFormData?.totalPage}
                 autoComplete="Total Page"
+                onChange={handleInputChange}
                 sx={{
                   width: '100%'
                 }}
@@ -119,6 +189,7 @@ function ModalEditDoujin({
                 name="lang"
                 variant="soft"
                 value={isFormData?.lang}
+                onChange={handleSelectLang}
                 sx={{
                   width: '100%'
                 }}
@@ -143,6 +214,8 @@ function ModalEditDoujin({
               variant="solid"
               startDecorator={<EditIcon />}
               color="success"
+              loading={isLoadingEditBtn}
+              onClick={onClickButtonEdit}
             >
               Update information
             </Button>

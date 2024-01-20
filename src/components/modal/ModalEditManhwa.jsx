@@ -8,7 +8,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
 import { LINK_API } from '../../utils/config.json';
 
-function ModalEditManhwa({ isOpenModal, isDataModal, setIsOpenModal, setIsProfile }) {
+function ModalEditManhwa({ 
+  isOpenModal, 
+  isDataModal, 
+  setIsOpenModal, 
+  setIsProfile
+}) {
   const [isEditData, setIsEditData] = useState();
   const [isLoadingButton, setIsLoadingButton] = useState(false);
 
