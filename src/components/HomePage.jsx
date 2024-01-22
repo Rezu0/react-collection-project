@@ -179,7 +179,6 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
     fetch(`${LINK_API}api/withdraw`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result.data);
         setIsProfile(result.data._user);
         setIsInfoWithdraw(result.data._withdraw);
         
@@ -220,112 +219,173 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
             />
           </Grid>
 
-          <Grid item="true" xs={12} md={6}>
-            <ItemGrid>
-              <Grid
-                container
-                spacing={2}
-              >
-                <Grid item="true" md={6} xs={12}>
-                  <Typography 
-                    fontWeight='900'
-                    fontSize='25px'
-                    color='#ffffff'
-                    fontFamily='Titillium Web'
-                    letterSpacing='3px'
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px', // Adjust the gap as needed
-                    }}
+          {(isRoles == 'staff') ? 
+            <>
+              {/* COMPONENT UNTUK BALANCE AMOUNT */}
+              <Grid item="true" xs={12} md={6}>
+                <ItemGrid>
+                  <Grid
+                    container
+                    spacing={2}
                   >
-                    <AccountBalanceWalletIcon /> Balance Amount
-                  </Typography>
-                </Grid>
-                <Grid item="true" md={6} xs={12}>
-                  <BalanceComponent 
-                    balance={(isProfile === 0) ? 'Loading...' : isProfile.amount[0].amount}
-                    isXs={isXs}
-                  />
-                </Grid>
-
-                <Grid item="true" md={12}>
-                  {(isProfile === 0) ? 'Loading...' :
-                    <Tooltip 
-                      title={`Last Withdraw ${showFormattedDate(isProfile.amount[0].lastWithdraw)}`}
-                      followCursor
-                    >
-                      <Button
-                        fullWidth
+                    <Grid item="true" md={6} xs={12}>
+                      <Typography 
+                        fontWeight='900'
+                        fontSize='25px'
+                        color='#ffffff'
+                        fontFamily='Titillium Web'
+                        letterSpacing='3px'
                         sx={{
-                          fontSize: '17px',
-                          backgroundColor: '#d1d1d1',
-                          color: '#000000',
-                          width: '100%'
-                        }}
-                        className='button-tarik'
-                        onClick={() => {
-                          if (isInfoWihtdraw?.status == 'pending') {
-                            toast.warn('Request Withdraw sedang dilakukan!')
-                          }else {
-                            setIsModalWithdraw(true)
-                          }
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px', // Adjust the gap as needed
                         }}
                       >
-                        Withdraw
-                      </Button>
-                    </Tooltip>
-                  }
-                </Grid>
-              </Grid>
-            </ItemGrid>
-          </Grid>
+                        <AccountBalanceWalletIcon /> Balance Amount
+                      </Typography>
+                    </Grid>
+                    <Grid item="true" md={6} xs={12}>
+                      <BalanceComponent 
+                        balance={(isProfile === 0) ? 'Loading...' : isProfile.amount[0].amount}
+                        isXs={isXs}
+                      />
+                    </Grid>
 
-          <Grid item="true" xs={12} md={6}>
-            <ItemGrid>
-              <Grid
-                container
-                spacing={2}
-              >
-                <Grid
-                  item="true"
-                  md={12}
-                >
-                  <Typography 
-                    fontWeight='900'
-                    fontSize='23px'
-                    color='#ffffff'
-                    fontFamily='Titillium Web'
-                    letterSpacing='3px'
-                    textAlign={(isXs) ? 'end' : 'start'}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px'
-                    }}
+                    <Grid item="true" md={12}>
+                      {(isProfile === 0) ? 'Loading...' :
+                        <Tooltip 
+                          title={`Last Withdraw ${showFormattedDate(isProfile.amount[0].lastWithdraw)}`}
+                          followCursor
+                        >
+                          <Button
+                            fullWidth
+                            sx={{
+                              fontSize: '17px',
+                              backgroundColor: '#d1d1d1',
+                              color: '#000000',
+                              width: '100%'
+                            }}
+                            className='button-tarik'
+                            onClick={() => {
+                              if (isInfoWihtdraw?.status == 'pending') {
+                                toast.warn('Request Withdraw sedang dilakukan!')
+                              }else {
+                                setIsModalWithdraw(true)
+                              }
+                            }}
+                          >
+                            Withdraw
+                          </Button>
+                        </Tooltip>
+                      }
+                    </Grid>
+                  </Grid>
+                </ItemGrid>
+              </Grid>
+
+              {/* COMPONENT UNTUK STATUS WITHDRAW */}
+              <Grid item="true" xs={12} md={6}>
+                <ItemGrid>
+                  <Grid
+                    container
+                    spacing={2}
                   >
-                    {(isRoles === 'owner-dd') ?
-                      <>
-                        <AccessTimeFilledOutlinedIcon /> Admin Status Withdraw
-                      </> : 
-                      <>
-                        <AccessTimeFilledOutlinedIcon /> Information Withdraw
-                      </>
-                    }
-                  </Typography>
-                </Grid>
-                <Grid
-                  item="true"
-                  md={12}
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                  }}
-                >
-                  {(isProfile === 0) ? 'Loading...' : 
-                    (isInfoWihtdraw?.status === 'pending') ? 
-                    <>
+                    <Grid
+                      item="true"
+                      md={12}
+                    >
+                      <Typography 
+                        fontWeight='900'
+                        fontSize='23px'
+                        color='#ffffff'
+                        fontFamily='Titillium Web'
+                        letterSpacing='3px'
+                        textAlign={(isXs) ? 'end' : 'start'}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                      >
+                        {(isRoles === 'owner-dd') ?
+                          <>
+                            <AccessTimeFilledOutlinedIcon /> Admin Status Withdraw
+                          </> : 
+                          <>
+                            <AccessTimeFilledOutlinedIcon /> Information Withdraw
+                          </>
+                        }
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item="true"
+                      md={12}
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                      }}
+                    >
+                      {(isProfile === 0) ? 'Loading...' : 
+                        (isInfoWihtdraw?.status === 'pending') ? 
+                        <>
+                          <Typography
+                            fontSize='13px'
+                            color='#ffffff'
+                            fontFamily='Titillium Web'
+                            sx={{
+                              backgroundColor: 'limegreen',
+                              padding: '3px 10px',
+                              borderRadius: '10px',
+                              margin: '0px 3px'
+                            }}
+                          >
+                            {formatToCurrency(isInfoWihtdraw?.amount)}
+                          </Typography>
+
+                          <Typography
+                            fontSize='13px'
+                            color='#ffffff'
+                            fontFamily='Titillium Web'
+                            sx={{
+                              backgroundColor: '#4c2a86',
+                              padding: '3px 10px',
+                              borderRadius: '10px',
+                              margin: '0px 3px'
+                            }}
+                          >
+                            {isInfoWihtdraw?.via}
+                          </Typography>
+
+                          <Typography
+                            fontSize='13px'
+                            fontFamily='Titillium Web'
+                            sx={{
+                              backgroundColor: '#ebebeb',
+                              padding: '3px 10px',
+                              borderRadius: '10px',
+                              margin: '0px 3px',
+                              color: '#000000'
+                            }}
+                          >
+                            {showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
+                          </Typography>
+
+                          <Typography
+                            fontSize='13px'
+                            fontFamily='Titillium Web'
+                            sx={{
+                              backgroundColor: '#000000',
+                              padding: '3px 10px',
+                              borderRadius: '10px',
+                              margin: '0px 3px',
+                              color: '#ffffff'
+                            }}
+                          >
+                            {isInfoWihtdraw?.nomor}
+                          </Typography>
+                        </>
+                    : (
                       <Typography
                         fontSize='13px'
                         color='#ffffff'
@@ -337,94 +397,39 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                           margin: '0px 3px'
                         }}
                       >
-                        {formatToCurrency(isInfoWihtdraw?.amount)}
+                        Tidak ada Request
                       </Typography>
-
-                      <Typography
-                        fontSize='13px'
-                        color='#ffffff'
-                        fontFamily='Titillium Web'
+                    ) }
+                    </Grid>
+                    <Grid
+                      item="true"
+                      md={12}
+                      xs={12}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row'
+                      }}
+                    >
+                      {(isProfile === 0) ? 'Loading...' :
+                        <Button
+                        fullWidth
                         sx={{
-                          backgroundColor: '#4c2a86',
-                          padding: '3px 10px',
-                          borderRadius: '10px',
-                          margin: '0px 3px'
+                          fontSize: '17px',
+                          backgroundColor: (isInfoWihtdraw?.status === 'pending') ? '#ffca2c' : (isInfoWihtdraw?.status === 'success') ? '#22bf76' : '#5c636a',
+                          color: '#000000',
+                          width: '100%'
                         }}
+                        className='button-status'
                       >
-                        {isInfoWihtdraw?.via}
-                      </Typography>
-
-                      <Typography
-                        fontSize='13px'
-                        fontFamily='Titillium Web'
-                        sx={{
-                          backgroundColor: '#ebebeb',
-                          padding: '3px 10px',
-                          borderRadius: '10px',
-                          margin: '0px 3px',
-                          color: '#000000'
-                        }}
-                      >
-                        {showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
-                      </Typography>
-
-                      <Typography
-                        fontSize='13px'
-                        fontFamily='Titillium Web'
-                        sx={{
-                          backgroundColor: '#000000',
-                          padding: '3px 10px',
-                          borderRadius: '10px',
-                          margin: '0px 3px',
-                          color: '#ffffff'
-                        }}
-                      >
-                        {isInfoWihtdraw?.nomor}
-                      </Typography>
-                    </>
-                 : (
-                  <Typography
-                    fontSize='13px'
-                    color='#ffffff'
-                    fontFamily='Titillium Web'
-                    sx={{
-                      backgroundColor: 'limegreen',
-                      padding: '3px 10px',
-                      borderRadius: '10px',
-                      margin: '0px 3px'
-                    }}
-                  >
-                    Tidak ada Request
-                  </Typography>
-                 ) }
-                </Grid>
-                <Grid
-                  item="true"
-                  md={12}
-                  xs={12}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row'
-                  }}
-                >
-                  {(isProfile === 0) ? 'Loading...' :
-                    <Button
-                    fullWidth
-                    sx={{
-                      fontSize: '17px',
-                      backgroundColor: (isInfoWihtdraw?.status === 'pending') ? '#ffca2c' : (isInfoWihtdraw?.status === 'success') ? '#22bf76' : '#5c636a',
-                      color: '#000000',
-                      width: '100%'
-                    }}
-                    className='button-status'
-                  >
-                    {(isInfoWihtdraw?.status == undefined) ? 'None' :  upperCaseStatus(isInfoWihtdraw?.status)}
-                  </Button>
-                  }
-                </Grid>
+                        {(isInfoWihtdraw?.status == undefined) ? 'None' :  upperCaseStatus(isInfoWihtdraw?.status)}
+                      </Button>
+                      }
+                    </Grid>
+                  </Grid>
+                </ItemGrid>
               </Grid>
-            </ItemGrid>
-          </Grid>
+            </>
+          : ''}
         </Grid>
 
         {/* Box Input, List data */}
