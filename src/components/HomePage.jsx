@@ -202,11 +202,9 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
           container
           spacing={2}
           padding='10px 15px'
-          marginBottom='20px'
-          sx={{
-            border: '1px solid #e97991',
-            borderRadius: '20px'
-          }}
+          marginBottom={(isRoles == 'staff') ? '20px' : ''}
+          border={(isRoles == 'staff') ? '1px solid #e97991' : ''}
+          borderRadius={(isRoles == 'staff') ? '20px' : ''}
         >
           <Grid
             item="true"
@@ -437,10 +435,8 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
           container
           spacing={2}
           padding='10px 15px'
-          sx={{
-            border: '1px solid #e97991',
-            borderRadius: '20px'
-          }}
+          border={(isRoles == 'staff') ? '1px solid #e97991' : ''}
+          borderRadius={(isRoles == 'staff') ? '20px' : ''}
         >
           <Grid
             item="true"

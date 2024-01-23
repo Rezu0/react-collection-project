@@ -35,20 +35,7 @@ function CardProfile({ isProfile }) {
               color='#ffffff'
               fontWeight='700'
             >
-              Username: { isProfile.username }
-            </Typography>
-          </Grid>
-          <Grid
-            item="true"
-            md={12}
-          >
-            <Typography
-              fontFamily='Titillium Web'
-              fontSize='20px'
-              color='#ffffff'
-              fontWeight='700'
-            >
-              Divisi & Role: { isProfile.divisi } - { isProfile.role }
+              { isProfile.username } - { isProfile.divisi }
             </Typography>
           </Grid>
         </Grid>

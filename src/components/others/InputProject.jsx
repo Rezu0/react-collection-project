@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { LINK_API } from '../../utils/config.json';
 import DatatablesManhwa from "./DatatablesManhwa";
 import InputForDoujin from "./InputForDoujin";
+import ComponentOwner from "./ComponentOwner";
 
 function InputProject({ isDivision, isProfile, setIsProfile }) {
   const [isFormData, setIsFormData] = useState({
@@ -313,7 +314,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
         <InputForDoujin 
           isProfile={isProfile}
           setIsProfile={setIsProfile}
-        /> : isDivision
+        /> : <ComponentOwner />
       }
     </>
   )
