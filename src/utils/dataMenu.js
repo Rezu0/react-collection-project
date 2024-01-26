@@ -42,3 +42,18 @@ export function isNew(isNew) {
       return 'No';
   }
 }
+
+export function showFormatDateReadable(date) {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZone: 'Asia/Jakarta' // Zona waktu WIB
+  };
+
+  const formattedDate = new Date(date).toLocaleString('id-ID', options);
+
+  return `${formattedDate} WIB`;
+}

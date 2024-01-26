@@ -1,9 +1,8 @@
 import { Grid, Typography } from "@mui/joy";
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
 import React from "react";
+import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
 
-function ComponentOwner() {
+function ComponentOwner({ isProfile, setIsProfile }) {
   return (
     <>
       <Grid
@@ -13,38 +12,7 @@ function ComponentOwner() {
         <Grid
           md={12}
         >
-          <Typography
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              color: 'inherit',
-              textDecoration: 'none',
-              fontSize: '25px'
-            }}
-          >
-            Data Doujin
-          </Typography>
-
-          <DataTable
-            size="small"
-            scrollable
-            scrollHeight="400px"
-            removableSort
-          >
-            <Column 
-              header="Nomor"
-              footer="Nomor"
-            />
-            <Column 
-              header="Title"
-              footer="Title"
-              sortable
-            />
-          </DataTable>
+          <DatatablesDoujinOwner />
         </Grid>
 
         <Grid
@@ -66,7 +34,7 @@ function ComponentOwner() {
             Data Manhwa
           </Typography>
 
-          <DataTable
+          {/* <DataTable
             size="small"
             scrollable
             scrollHeight="400px"
@@ -81,7 +49,7 @@ function ComponentOwner() {
               footer="Title"
               sortable
             />
-          </DataTable>
+          </DataTable> */}
         </Grid>
       </Grid>
     </>
