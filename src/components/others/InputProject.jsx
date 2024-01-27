@@ -314,7 +314,9 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
         <InputForDoujin 
           isProfile={isProfile}
           setIsProfile={setIsProfile}
-        /> : <ComponentOwner />
+        /> : <ComponentOwner 
+        isProfile={isProfile}
+        setIsProfile={setIsProfile} />
       }
     </>
   )

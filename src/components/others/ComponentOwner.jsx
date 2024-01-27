@@ -12,7 +12,10 @@ function ComponentOwner({ isProfile, setIsProfile }) {
         <Grid
           md={12}
         >
-          <DatatablesDoujinOwner />
+          <DatatablesDoujinOwner
+            isProfile={isProfile}
+            setIsProfile={setIsProfile}
+          />
         </Grid>
 
         <Grid

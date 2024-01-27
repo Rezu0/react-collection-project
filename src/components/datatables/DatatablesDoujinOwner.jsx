@@ -37,6 +37,10 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
       ]
     },
   });
+  const [isLoading, setIsLoading] = useState({
+    loading: false,
+    id: null
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -68,7 +72,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
         }
       }
     }
-  }, [setIsDoujinData])
+  }, [setIsDoujinData, isProfile])
 
   const rowNumberTemplate = (rowData, column) => {
     const rowIndex = isDoujinData.indexOf(rowData) + 1;
@@ -84,7 +88,59 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
   }
 
   const onClickHandlerApproved = (data) => {
-    console.log(data);
+    setIsLoading(() => ({
+      loading: true,
+      id: data?.uuid
+    }))
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    try {
+      if (storedToken) {
+        if (parseStorage.state) {
+          const headerApproved = new Headers();
+          headerApproved.append("Content-Type", "application/json");
+          headerApproved.append("Authorization", `Bearer ${parseStorage._token}`);
+
+          const dataApproved = JSON.stringify({
+            uuid: data?.uuid
+          });
+
+          const requestOptions = {
+            method: 'PUT',
+            headers: headerApproved,
+            body: dataApproved,
+            redirect: 'follow'
+          }
+
+          fetch(`${LINK_API}api/doujin/approved`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.data) {
+                
+                setTimeout(() => {
+                  setIsProfile(result.data._user);
+                  setIsLoading(() => ({
+                    loading: false,
+                    id: null
+                  }))
+                  toast.success(result.message);
+                }, 2000);
+              }
+
+            }).catch((err) => {
+              console.error(err);
+              setIsLoading(() => ({
+                loading: false,
+                id: null
+              }))
+              toast.error('Terjadi kesalahan saat approved!');
+            })
+        }
+      }
+    } catch (err) {
+      return;
+    }
   }
 
   const rowTitleTemplate = (data) => {
@@ -179,13 +235,17 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
               variant="soft"
               color="warning"
             >
-              <IconButton
+              <Button 
                 variant="plain"
                 color="success"
+                startDecorator={<CheckCircleIcon />}
+                sx={{
+                  "--Button-gap": "0px",
+                  padding: '0px 5px'
+                }}
                 onClick={() => onClickHandlerApproved(data)}
-              >
-                <CheckCircleIcon />
-              </IconButton>
+                loading={(isLoading.id === data?.uuid) ? isLoading.loading : false}
+              />
             </Tooltip>
           </>
         : <>
