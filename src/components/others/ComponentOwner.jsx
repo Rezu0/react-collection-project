@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@mui/joy";
 import React from "react";
 import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
+import DatatablesManhwaOwner from "../datatables/DatatablesManhwaOwner";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   return (
@@ -21,38 +22,10 @@ function ComponentOwner({ isProfile, setIsProfile }) {
         <Grid
           md={12}
         >
-          <Typography
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              color: 'inherit',
-              textDecoration: 'none',
-              fontSize: '25px'
-            }}
-          >
-            Data Manhwa
-          </Typography>
-
-          {/* <DataTable
-            size="small"
-            scrollable
-            scrollHeight="400px"
-            removableSort
-          >
-            <Column 
-              header="Nomor"
-              footer="Nomor"
-            />
-            <Column 
-              header="Title"
-              footer="Title"
-              sortable
-            />
-          </DataTable> */}
+          <DatatablesManhwaOwner 
+            isProfile={isProfile}
+            setIsProfile={setIsProfile}
+          />
         </Grid>
       </Grid>
     </>
