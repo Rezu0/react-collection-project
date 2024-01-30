@@ -27,15 +27,49 @@ const functionLang = (lang) => {
   }
 }
 
-function ButtonRefreshData() {
+function ButtonRefreshData({
+  setIsManhwaData
+}) {
   const [isRefreshLoading, setIsRefreshLoading] = useState(false);
 
   const onClickRefresh = () => {
     setIsRefreshLoading(true);
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
 
-    setTimeout(() => {
-      setIsRefreshLoading(false);
-    }, 2000)
+    if (storedToken) {
+      if (parseStorage.state) {
+        try {
+          const headersGetAll = new Headers();
+          headersGetAll.append("Content-Type", "application/json");
+          headersGetAll.append("Authorization", `Bearer ${parseStorage._token}`);
+
+          const headersOptions = {
+            method: 'GET',
+            headers: headersGetAll,
+            redirect: 'follow'
+          };
+
+          fetch(`${LINK_API}api/manhwa`, headersOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.data) {
+                setTimeout(() => {
+                  setIsManhwaData(result.data);
+                  setIsRefreshLoading(false);
+                  toast.success('Data berhasil diperbarui');
+                }, 2000)
+              }
+            }).catch((err) => {
+              console.error('Error refresh manhwa: ', err);
+              toast.error('Terjadi kesalahan!');
+            })
+        } catch (err) {
+          console.error(err);
+          toast.error('Terjadi kesalahan!');
+        }
+      }
+    }
   }
 
   return (
@@ -256,7 +290,9 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             display='flex'
             justifyContent='flex-end'
           >
-            <ButtonRefreshData />
+            <ButtonRefreshData 
+              setIsManhwaData={setIsManhwaData}
+            />
             <span className="p-input-icon-left">
               <SearchIcon style={{ marginTop: '-11px' }} />
               <InputText 

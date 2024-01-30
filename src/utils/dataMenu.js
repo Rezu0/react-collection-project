@@ -1,11 +1,6 @@
 export function settingsLogout() {
   return [
     {
-      name: 'Profile',
-      path: '/profile',
-      icon: 'Person'
-    },
-    {
       name: 'Logout',
       path: '/logout',
       icon: 'Logout'
