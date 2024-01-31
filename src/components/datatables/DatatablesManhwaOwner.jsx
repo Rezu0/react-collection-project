@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { LINK_API } from '../../utils/config.json';
 import { toast } from "react-toastify";
-import { isNew, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
+import { formatDateForHuman, isNew, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import { Tag } from "primereact/tag";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -208,7 +208,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           placement="top"
         >
           <Typography>
-            {showFormatDatatable(data?.insertedAt)}
+            {formatDateForHuman(data?.insertedAt)}
           </Typography>
         </Tooltip>
       </>

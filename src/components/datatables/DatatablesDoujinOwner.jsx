@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { LINK_API } from '../../utils/config.json';
 import { toast } from "react-toastify";
 import { Button, Grid, IconButton, Sheet, Tooltip, Typography } from "@mui/joy";
-import { showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
+import { formatDateForHuman, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
@@ -269,7 +269,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           placement="top"
         >
           <Typography>
-            {showFormatDatatable(data?.insertedAt)}
+            {formatDateForHuman(data?.insertedAt)}
           </Typography>
         </Tooltip>
       </>

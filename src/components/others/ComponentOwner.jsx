@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, ModalClose, Sheet, Typography } from "@mui/joy";
+import { Box, Button, Grid, Modal, ModalClose, Sheet, Tooltip, Typography } from "@mui/joy";
 import React from "react";
 import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
 import DatatablesManhwaOwner from "../datatables/DatatablesManhwaOwner";
@@ -9,10 +9,51 @@ import { Column } from "primereact/column";
 import { useEffect } from "react";
 import { LINK_API } from '../../utils/config.json';
 import { toast } from "react-toastify";
+import { formatDateForHuman, formatToCurrency, formatViaWithdraw, showFormatDateReadable } from "../../utils/dataMenu";
+import { Tag } from "primereact/tag";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import SearchIcon from '@mui/icons-material/Search';
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
   const [isRequestData, setIsRequestData] = useState();
+  const [isLoadingDone, setIsLoadingDone] = useState({
+    loading: false,
+    id: null
+  });
+  const [isFilter, setIsFilter] = useState({
+    global: {
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+    },
+    via: {
+      operator: FilterOperator.OR,
+      constraints: [
+        {
+          value: null,
+          matchMode: FilterMatchMode.EQUALS
+        }
+      ]
+    },
+    "user.displayUsername": {
+      operator: FilterOperator.AND,
+      constraints: [
+        {
+          value: null,
+          matchMode: FilterMatchMode.CONTAINS
+        }
+      ]
+    }
+  });
+  const [via] = useState([
+    'DANA',
+    'OVO',
+    'GOPAY',
+    'Shopee Pay'
+  ]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -53,6 +94,117 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     const rowIndex = isRequestData.indexOf(row) + 1;
     return rowIndex;
   }
+
+  const rowSaldoTemplate = (data) => {
+    return `${formatToCurrency(data.amount)}`;
+  }
+
+  const rowViaTemplate = (data) => {
+    const formatedVia = formatViaWithdraw(data?.via);
+    return (
+      <>
+        <Tag 
+          value={formatedVia.via}
+          style={{
+            backgroundColor: `${formatedVia.colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  const viaItemTemplate = (option) => {
+    return (
+      <>
+        <Tag 
+          value={option}
+          style={{
+            backgroundColor: `${formatViaWithdraw(option).colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  const rowDateWithdraw = (data) => {
+    return (
+      <>
+        <Tooltip
+          title={showFormatDateReadable(data?.dateWithdraw)}
+          arrow
+          placement="top"
+        >
+          <Typography>
+            {formatDateForHuman(data?.dateWithdraw)}
+          </Typography>
+        </Tooltip>
+      </>
+    )
+  }
+
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...isFilter };
+
+    _filters["global"].value = value;
+    setIsFilter(_filters);
+  }
+
+  const onClickButtonDone = (data) => {
+    if (isLoadingDone.loading) {
+      return;
+    }
+
+    setIsLoadingDone({
+      loading: true,
+      id: data?.uuid
+    });
+
+    setTimeout(() => {
+      setIsLoadingDone({
+        loading: false,
+        id: null
+      })
+    }, 2000);
+  }
+
+  const rowButtonAction = (data) => {
+    return (
+      <>
+        <Button
+          variant="solid"
+          startDecorator={<CheckCircleIcon fontSize="small" />}
+          color="success"
+          sx={{
+            "--Button-gap": "2px",
+            padding: '0 10px',
+            fontSize: '13px'
+          }}
+          onClick={() => onClickButtonDone(data)}
+          loading={(isLoadingDone.id === data?.uuid) ? isLoadingDone.loading : false}
+        >
+          Done
+        </Button>
+      </>
+    )
+  }
+
+  const viaRowFilterTemplate = (options) => {
+    return (
+      <Dropdown 
+        value={options.value}
+        options={via}
+        onChange={(e) => options.filterApplyCallback(e.value)}
+        itemTemplate={viaItemTemplate}
+        placeholder="Select one..."
+        className="p-column-filter"
+        showClear
+        style={{ minWidth: '12rem' }}
+      />
+    )
+  }
+
+  const value = isFilter["global"] ? isFilter["global"].value : "";
 
   return (
     <>
@@ -118,6 +270,49 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                 </Grid>
 
                 <Grid
+                  md={6}
+                  xs={12}
+                  display='flex'
+                  justifyContent='start'
+                >
+                  <Typography
+                    noWrap
+                    component="a"
+                    sx={{
+                      mr: 2,
+                      display: { md: 'flex' },
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      color: 'inherit',
+                      textDecoration: 'none',
+                      fontSize: '25px'
+                    }}
+                  >
+                    List Withdraw
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  md={6}
+                  xs={12}
+                  margin='15px 0'
+                  display='flex'
+                  justifyContent='end'
+                >
+                  <span className="p-input-icon-left">
+                    <SearchIcon style={{ marginTop: '-11px' }} />
+                    <InputText 
+                      type="search"
+                      value={value || ""}
+                      placeholder="Search here..."
+                      size='small'
+                      style={{ fontSize: '14px' }}
+                      onChange={(e) => onGlobalFilterChange(e)}
+                    />
+                  </span>
+                </Grid>
+
+                <Grid
                   md={12}
                 >
                   <DataTable
@@ -132,10 +327,13 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                     tableStyle={{ 
                       minWidth: '50rem' 
                     }}
+                    filters={isFilter}
+                    onFilter={(e) => setIsFilter(e.filters)}
+                    emptyMessage="No result found withdraw"
                   >
                     <Column 
-                      header="Nomor"
-                      footer="Nomor"
+                      header="No"
+                      footer="No"
                       body={rowNumberTemplate}
                       style={{ width: '5%' }}
                       frozen
@@ -146,10 +344,57 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                       header="Staff"
                       footer="Staff"
                       sortable
+                      filter
+                      filterPlaceholder="Search here..."
                       style={{
                         width: '20%',
                         fontWeight: 'bold'
                       }}
+                    />
+
+                    <Column 
+                      field="amount"
+                      header="Total Withdraw"
+                      footer="Total Withdraw"
+                      sortable
+                      body={rowSaldoTemplate}
+                      style={{
+                        width: '20%',
+                      }}
+                    />
+
+                    <Column 
+                      field="via"
+                      header="Via"
+                      footer="Via"
+                      body={rowViaTemplate}
+                      style={{
+                        width: '20%',
+                      }}
+                      filter
+                      filterElement={viaRowFilterTemplate}
+                    />
+
+                    <Column 
+                      field="nomor"
+                      header="Nomor HP"
+                      footer="Nomor HP"
+                      style={{
+                        width: '20%'
+                      }}
+                    />
+
+                    <Column 
+                      field="dateWithdraw"
+                      header="Date Withdraw"
+                      footer="Data Wihtdraw"
+                      body={rowDateWithdraw}
+                    />
+
+                    <Column 
+                      header="Action"
+                      footer="Action"
+                      body={rowButtonAction}
                     />
                   </DataTable>
                 </Grid>
