@@ -16,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
+import RefreshListWithdraw from "./RefreshListWithdraw";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
@@ -160,12 +161,50 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       id: data?.uuid
     });
 
-    setTimeout(() => {
-      setIsLoadingDone({
-        loading: false,
-        id: null
-      })
-    }, 2000);
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    if (storedToken) {
+      if (parseStorage.state) {
+        try {
+          const headersDone = new Headers();
+          headersDone.append("Content-Type", "application/json");
+          headersDone.append("Authorization", `Bearer ${parseStorage._token}`);
+
+          const dataRaw = JSON.stringify({
+            uuid: data?.uuid
+          });
+
+          const requestOptions = {
+            method: 'PUT',
+            headers: headersDone,
+            body: dataRaw,
+            redirect: 'follow'
+          };
+
+          fetch(`${LINK_API}api/admin/withdraw`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.data) {
+                setTimeout(() => {
+                  setIsRequestData(result.data);
+                  toast.success(result.message);
+                  setIsLoadingDone({
+                    loading: false,
+                    id: null
+                  });
+                }, 2000);
+              }
+            }).catch((err) => {
+              console.error(err);
+              toast.error('Terjadi kesalahan!');
+            })
+        } catch (err) {
+          console.error(err);
+          toast.error('Terjadi kesalahan!');
+        }
+      }
+    }
   }
 
   const rowButtonAction = (data) => {
@@ -299,6 +338,9 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                   display='flex'
                   justifyContent='end'
                 >
+                  <RefreshListWithdraw 
+                    setIsRequestData={setIsRequestData}
+                  />
                   <span className="p-input-icon-left">
                     <SearchIcon style={{ marginTop: '-11px' }} />
                     <InputText 

@@ -19,6 +19,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
   });
   const [isModal, setIsModal] = useState(false);
   const [isIdForDatatable, setIsForDatatable] = useState(false);
+  const [isLoadingManhwa, setIsLoadingManwha] = useState(false);
 
   useEffect(() => {
     setIsFormData((prevFormData) => ({
@@ -72,6 +73,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
   }
 
   const handleSubmit = () => {
+    setIsLoadingManwha(true);
     const storedToken = localStorage.getItem('loginState');
     const parseStorage = JSON.parse(storedToken);
 
@@ -92,21 +94,26 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
         .then((response) => response.json())
         .then((result) => {
           if (result.data) {
-            setIsProfile(result.data._user)
-            setIsFormData(() => ({
-              userId: '',
-              title: "",
-              totalCh: 1,
-              lang: null,
-              isNew: null,
-              link: ""
-            }))
-            toast.success(result.message);
+            setTimeout(() => {
+              setIsProfile(result.data._user)
+              setIsFormData(() => ({
+                userId: '',
+                title: "",
+                totalCh: 1,
+                lang: null,
+                isNew: null,
+                link: ""
+              }));
+              setIsLoadingManwha(false);
+              toast.success(result.message);
+            }, 2000);
           } else {
+            setIsLoadingManwha(false);
             toast.error(result.message);
           }
         }).catch((err) => {
-          toast.error('Terjadi kesalahan saat submit!')
+          toast.error('Terjadi kesalahan saat submit!');
+          setIsLoadingManwha(false);
           console.error(err);
         })
     } catch (err) {
@@ -253,6 +260,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               sx={{
                 margin: '20px 0 10px 0'
               }}
+              loading={isLoadingManhwa}
             >
               Submit Project
             </Button>
