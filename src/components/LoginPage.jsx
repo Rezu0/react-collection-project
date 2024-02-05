@@ -6,11 +6,12 @@ import {
   FormLabel,
   Button,
   Grid,
-  CssBaseline
+  CssBaseline,
 } from '@mui/joy';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { LINK_API } from '../utils/config.json'
+import { Link } from 'react-router-dom';
 
 function LoginPage({ setIsAuthenticated, setIsRoles, setIsUsername, setIsDivision }) {
   const [username, setUsername] = useState('');
@@ -39,10 +40,12 @@ function LoginPage({ setIsAuthenticated, setIsRoles, setIsUsername, setIsDivisio
 
     if (!username) {
       toast.error('Username tidak boleh kosong!')
+      return;
     }
 
     if (!password) {
       toast.error('Password tidak boleh kosong!')
+      return;
     }
 
     if (username && password) {
@@ -162,7 +165,20 @@ function LoginPage({ setIsAuthenticated, setIsRoles, setIsUsername, setIsDivisio
 
         <Grid container spacing={2} textAlign='start' marginTop='2px' fontSize='13px'>
           <Grid md={12}>
-            Tidak punya akun? hubungi admin
+            Tidak punya akun?
+            {
+              <Link
+                to="/register"
+                style={{
+                  marginLeft: '4px',
+                  textDecoration: 'underline',
+                  fontSize: '13px',
+                  color: 'blue'
+                }}
+              >
+                Register disini
+              </Link>
+            }
           </Grid>
         </Grid>
 

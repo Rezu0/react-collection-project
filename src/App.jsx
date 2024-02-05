@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import LogoutPage from './components/LogoutPage';
 import { LINK_API } from './utils/config.json';
 import { toast } from 'react-toastify';
+import RegisterPage from './components/RegisterPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -78,6 +79,16 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route
+            path='/register'
+            element={
+              isAuthenticated ? 
+                <Navigate to="/" />
+              :
+              <RegisterPage />
+            }
+          />
+
           <Route 
             path="/login"
             element={
