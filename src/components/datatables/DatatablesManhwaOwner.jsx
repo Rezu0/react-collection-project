@@ -1,4 +1,4 @@
-import { Button, Grid, Sheet, Tooltip, Typography } from "@mui/joy";
+import { Button, Grid, IconButton, Sheet, Tooltip, Typography } from "@mui/joy";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import React from "react";
@@ -12,6 +12,7 @@ import { formatDateForHuman, isNew, showFormatDatatable, showFormatDateReadable 
 import { Tag } from "primereact/tag";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 
 const functionLang = (lang) => {
@@ -122,6 +123,10 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
       ]
     },
   });
+  const [isLoading, setIsLoading] = useState({
+    loading: false,
+    id: null
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem('loginState');
@@ -174,6 +179,14 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
         >
           <Typography>
             {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
+            {(data?.approved === 1) ? 
+              <IconButton
+                variant="plain"
+                color="success"
+              >
+                <CheckCircleIcon />
+              </IconButton>
+            : '' }
           </Typography>
         </Tooltip>
       </>
@@ -242,6 +255,94 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
 
     _filters["global"].value = value;
     setIsFilter(_filters);
+  }
+
+  const onClickHandlerApproved = (data) => {
+    if (isLoading?.loading) {
+      return;
+    }
+
+    setIsLoading(() => ({
+      loading: true,
+      id: data?.uuid
+    }));
+
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    try {
+      if (storedToken) {
+        if (parseStorage.state) {
+          const headerApproved = new Headers();
+          headerApproved.append("Content-Type", "application/json");
+          headerApproved.append("Authorization", `Bearer ${parseStorage._token}`);
+
+          const dataApproved = JSON.stringify({
+            uuid: data?.uuid
+          });
+
+          const requestOptions = {
+            method: 'PUT',
+            headers: headerApproved,
+            body: dataApproved,
+            redirect: 'follow'
+          }
+
+          fetch(`${LINK_API}api/manhwa/approved`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              if (result.data) {
+
+                setTimeout(() => {
+                  setIsProfile(result.data._user);
+                  setIsLoading(() => ({
+                    loading: false,
+                    id: null
+                  }));
+                  toast.success(result.message);
+                }, 2000);
+              }
+            }).catch((err) => {
+              setIsLoading(() => ({
+                loading: false,
+                id: null
+              }))
+              toast.error('Terjadi kesalahan!');
+              console.error('Error cathing approved: ', err);
+            })
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const rowActionTemplate = (data) => {
+    return (
+      <>
+        {(data?.approved === 0) ?
+          <>
+            <Tooltip
+              title="Approved"
+              variant="soft"
+              color="warning"
+            >
+              <Button 
+                variant="plain"
+                color="success"
+                startDecorator={<CheckCircleIcon />}
+                sx={{
+                  "--button-gap": "0px",
+                  padding: '0px 5px'
+                }}
+                onClick={() => onClickHandlerApproved(data)}
+                loading={(isLoading.id === data?.uuid) ? isLoading.loading : false}
+              />
+            </Tooltip>
+          </>
+        : ''}
+      </>
+    )
   }
 
   const value = isFilter["global"] ? isFilter["global"].value : "";
@@ -386,6 +487,12 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             header="Link"
             footer="Link"
             body={rowLinkButtonTempate}
+          />
+
+          <Column 
+            header="Action"
+            footer="Action"
+            body={rowActionTemplate}
           />
         </DataTable>
       </Sheet>

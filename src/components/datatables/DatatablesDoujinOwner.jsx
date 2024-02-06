@@ -160,6 +160,10 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
   }
 
   const onClickHandlerApproved = (data) => {
+    if (isLoading.loading) {
+      return;
+    }
+
     setIsLoading(() => ({
       loading: true,
       id: data?.uuid

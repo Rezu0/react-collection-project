@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Delete } from "@mui/icons-material";
 import ModalEditDoujin from "../modal/ModalEditDoujin";
 import DialogDeleteDoujin from "../modal/DialogDeleteDoujin";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function DatatablesDoujin({ isProfile, setIsProfile }) {
   const [isDataTable, setIsDataTable] = useState();
@@ -114,7 +115,14 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
       >
         <Typography>
           {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
-          <Badge value="👍"></Badge>
+          {(data?.approved === 1) ? (
+            <IconButton
+              variant="plain"
+              color="success"
+            >
+              <CheckCircleIcon />
+            </IconButton>
+          ) : ''}
         </Typography>
       </Tooltip>
       </>

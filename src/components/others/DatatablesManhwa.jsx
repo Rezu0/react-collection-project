@@ -9,12 +9,13 @@ import { LINK_API } from '../../utils/config.json';
 import { showFormatDatatable, isNew } from '../../utils/dataMenu';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 
 
 // STYLING
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-import { Box, Button, Grid, IconButton, Tooltip } from "@mui/joy";
+import { Box, Button, Grid, IconButton, Tooltip, Typography } from "@mui/joy";
 import { InputText } from "primereact/inputtext";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
@@ -213,6 +214,34 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
     )
   }
 
+  const rowTitleTemplate = (data) => {
+    let string = data?.title;
+    const limitStr = string.substr(0, 50);
+    
+    return (
+      <>
+        <Tooltip
+          title={data?.title}
+          variant="solid"
+          arrow
+          placement="top"
+        >
+          <Typography>
+            {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
+            {(data?.approved === 1) ? 
+              <IconButton
+                variant="plain"
+                color="success"
+              >
+                <CheckCircleIcon />
+              </IconButton>
+            : ''}
+          </Typography>
+        </Tooltip>
+      </>
+    )
+  }
+
   const value = isFilter["global"] ? isFilter["global"].value : "";
 
   return (
@@ -319,6 +348,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   filter
                   filterPlaceholder="Search..."
                   style={{ width: '25%', fontWeight: 'bold', fontSize: '14px' }}
+                  body={rowTitleTemplate}
                 />
                 <Column 
                   field="totalCh"
