@@ -3,6 +3,7 @@ import React from "react";
 import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
 import DatatablesManhwaOwner from "../datatables/DatatablesManhwaOwner";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import StorageIcon from '@mui/icons-material/Storage';
 import { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -20,6 +21,7 @@ import RefreshListWithdraw from "./RefreshListWithdraw";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
+  const [isAllSaldoData, setIsAllSaldoData] = useState(false);
   const [isRequestData, setIsRequestData] = useState();
   const [isLoadingDone, setIsLoadingDone] = useState({
     loading: false,
@@ -268,6 +270,125 @@ function ComponentOwner({ isProfile, setIsProfile }) {
             List Withdraw
           </Button>
 
+          <Button
+            variant="solid"
+            color="primary"
+            startDecorator={<StorageIcon />}
+            sx={{
+              marginLeft: 2
+            }}
+            onClick={() => setIsAllSaldoData(true)}
+          >
+            All Saldo Staff
+          </Button>
+
+          {/* MODAL ALL SALDO STAFF */}
+          <Modal
+            open={isAllSaldoData}
+            onClose={(event, reason) => {
+              if (reason && reason === 'backdropClick') {
+                return;
+              }
+              setIsAllSaldoData(false);
+            }}
+            sx={{
+              zIndex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Sheet
+              variant="outlined"
+              sx={{
+                width: '100%',
+                maxWidth: 1000,
+                borderRadius: 'md',
+                p: 3,
+                boxShadow: 'lg',
+                height: 'auto'
+              }}
+            >
+              <Grid
+                container
+                spacing={2}
+              >
+                <Grid
+                  md={12}
+                >
+                  <ModalClose
+                    variant="plain"
+                    sx={{ m: 1 }}
+                  />
+                </Grid>
+
+                <Grid
+                  md={6}
+                  xs={12}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'start'
+                  }}
+                >
+                  <Typography
+                    noWrap
+                    component="a"
+                    sx={{
+                      mr: 2,
+                      display: { md: 'flex' },
+                      fontFamily: 'monospace',
+                      fontWeight: 700,
+                      color: 'inherit',
+                      textDecoration: 'none',
+                      fontSize: '25px'
+                    }}
+                  >
+                    List Saldo Staff
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  md={6}
+                  xs={12}
+                  margin='15px 0'
+                  display='flex'
+                  justifyContent='end'
+                >
+                  <span className="p-input-icon-left">
+                    <SearchIcon 
+                      style={{ marginTop: '-11px' }}
+                    />
+                    <InputText 
+                      type="search"
+                      placeholder="Search here..."
+                      size='small'
+                      style={{ fontSize: '14px' }}
+                    />
+                  </span>
+                </Grid>
+
+                <Grid
+                  md={12}
+                >
+                  <DataTable
+                    size="small"
+                    scrollable
+                    scrollHeight="500px"
+                    rows={10}
+                    paginator
+                    rowsPerPageOptions={[5, 10, 25, 50, 100]}
+                    removableSort
+                    tableStyle={{
+                      minWidth: '50rem'
+                    }}
+                    emptyMessage="No result found staff"
+                  ></DataTable>
+                </Grid>
+              </Grid>
+            </Sheet>
+          </Modal>
+
+          {/* MODAL LIST WITHDRAW */}
           <Modal
             open={isModalRequest}
             onClose={(event, reason) => {
