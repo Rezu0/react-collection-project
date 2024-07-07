@@ -382,7 +382,15 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                       minWidth: '50rem'
                     }}
                     emptyMessage="No result found staff"
-                  ></DataTable>
+                  >
+                    <Column 
+                      header="No"
+                      footer="No"
+                      style={{ width: '5%' }}
+                      frozen
+                    />
+
+                  </DataTable>
                 </Grid>
               </Grid>
             </Sheet>
