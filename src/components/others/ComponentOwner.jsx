@@ -146,7 +146,6 @@ function ComponentOwner({ isProfile, setIsProfile }) {
           if (response.status) {
             if (response.status === 'fail') {
               console.error(response.message);
-              toast.error('Terjadi kesalahan');
             }
 
             if (response.status === 'success') {
@@ -155,6 +154,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
           }
         }).catch((err) => {
           console.error(err);
+          toast.error('Terjadi kesalahan');
         })
       }
     }
