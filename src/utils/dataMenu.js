@@ -89,6 +89,20 @@ export function formatViaWithdraw(via) {
   }
 }
 
+export function formatDivisiStaff(divisi) {
+  if (divisi === 'manhwa') {
+    return {
+      divisi: divisi,
+      colorBtn: '#b6242b'
+    }
+  }
+
+  return {
+    divisi: divisi,
+    colorBtn: '#1f1f1f'
+  }
+}
+
 export function formatDateForHuman(dateIso) {
   const date = new Date(dateIso);
   const now = new Date();
