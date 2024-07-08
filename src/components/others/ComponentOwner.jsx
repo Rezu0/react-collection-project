@@ -25,6 +25,10 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalSaldo, setIsModalSaldo] = useState(false);
   const [isRequestData, setIsRequestData] = useState();
   const [isAllSaldo, setIsAllSaldo] = useState();
+  const [isLoadingDetail, setIsLoadingDetail] = useState({
+    loading: false,
+    id: null,
+  });
   const [isLoadingDone, setIsLoadingDone] = useState({
     loading: false,
     id: null
@@ -215,6 +219,76 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       </>
     )
   }
+
+  const rowSaldoStaffTemplate = (data) => {
+    return `${formatToCurrency(data.saldo[0].amount)}`;
+  }
+
+  const rowLastWithdrawTemplate = (data) => {
+    return (
+      <>
+      {(data.saldo[0].lastWithdraw === '') ? 'Invalid Date' : 
+        <>
+          <Tooltip
+            title={showFormatDateReadable(data.saldo[0].lastWithdraw)}
+            arrow
+            placement="top"
+          >
+            <Typography>
+              {formatDateForHuman(data.saldo[0].lastWithdraw)}
+            </Typography>
+          </Tooltip>
+        </>
+      }
+      </>
+    )
+  }
+
+  const rowButtonSaldoStaff = (data) => {
+    return (
+      <>
+        <Tooltip
+          title="Bukti Project & Saldo"
+          variant="soft"
+          color="danger"
+          arrow
+          placement="right"
+        >
+          <Button
+            variant="solid"
+            color="primary"
+            sx={{
+              padding: '0 10px',
+              fontSize: '13px'
+            }}
+            loading={(isLoadingDetail.id === data?.displayId) ? isLoadingDetail.loading : false}
+            onClick={() => {
+
+              if (isLoadingDetail.loading) {
+                return;
+              }
+
+              setIsLoadingDetail({
+                loading: true,
+                id: data?.displayId
+              });
+
+              setTimeout(() => {
+                setIsLoadingDetail({
+                  loading: false,
+                  id: null
+                });
+              }, 1000)
+            }}
+          >
+            Detail Project
+          </Button>
+        </Tooltip>
+      </>
+    )
+  }
+
+  // END ROW UNTUK ALL SALDO STAFF
 
   // ROW UNTUK LIST WITHDRAW
 
@@ -504,7 +578,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                     value={isAllSaldo}
                     size="small"
                     scrollable
-                    scrollHeight="500px"
+                    scrollHeight="400px"
                     rows={10}
                     paginator
                     rowsPerPageOptions={[5, 10, 25, 50, 100]}
@@ -546,6 +620,30 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                       style={{
                         width: '20%',
                       }}
+                    />
+
+                    <Column 
+                      field="saldo"
+                      header="Saldo"
+                      footer="Saldo"
+                      sortable
+                      body={rowSaldoStaffTemplate}
+                      style={{
+                        width: '20%'
+                      }}
+                    />
+
+                    <Column 
+                      field="saldo"
+                      header="Last Withdraw"
+                      footer="Last Withdraw"
+                      body={rowLastWithdrawTemplate}
+                    />
+
+                    <Column 
+                      header="Action"
+                      footer="Action"
+                      body={rowButtonSaldoStaff}
                     />
 
                   </DataTable>
