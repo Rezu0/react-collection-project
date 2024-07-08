@@ -10,7 +10,7 @@ import { Column } from "primereact/column";
 import { useEffect } from "react";
 import { LINK_API } from '../../utils/config.json';
 import { toast } from "react-toastify";
-import { formatDateForHuman, formatToCurrency, formatViaWithdraw, showFormatDateReadable } from "../../utils/dataMenu";
+import { formatDateForHuman, formatToCurrency, formatViaWithdraw, showFormatDateReadable, formatDivisiStaff } from "../../utils/dataMenu";
 import { Tag } from "primereact/tag";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
@@ -18,11 +18,13 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
+import { handlerFetchingAllSaldoStaff } from '../../utils/handler-fetching';
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
-  const [isAllSaldoData, setIsAllSaldoData] = useState(false);
+  const [isModalSaldo, setIsModalSaldo] = useState(false);
   const [isRequestData, setIsRequestData] = useState();
+  const [isAllSaldo, setIsAllSaldo] = useState();
   const [isLoadingDone, setIsLoadingDone] = useState({
     loading: false,
     id: null
@@ -51,11 +53,39 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       ]
     }
   });
+  const [isFilterSaldo, setIsFilterSaldo] = useState({
+    global: {
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
+    },
+    displayUsername: {
+      operator: FilterOperator.AND,
+      constraints: [
+        {
+          value: null,
+          matchMode: FilterMatchMode.CONTAINS
+        }
+      ]
+    },
+    divisi: {
+      operator: FilterOperator.OR,
+      constraints: [
+        {
+          value: null,
+          matchMode: FilterMatchMode.EQUALS
+        }
+      ]
+    },
+  });
   const [via] = useState([
     'DANA',
     'OVO',
     'GOPAY',
     'Shopee Pay'
+  ]);
+  const [divisi] = useState([
+    'manhwa',
+    'doujin',
   ]);
 
   useEffect(() => {
@@ -92,6 +122,101 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       }
     }
   }, [setIsRequestData, isProfile])
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    if (storedToken) {
+      if (parseStorage.state) {
+        const responseAllSaldoStaff = async () => {
+          const response = await handlerFetchingAllSaldoStaff(parseStorage._token);
+          return {
+            status: response.status,
+            message: response.message,
+            data: response.data
+          }
+        }; 
+
+        responseAllSaldoStaff().then((response) => {
+          if (response.status) {
+            if (response.status === 'fail') {
+              console.error(response.message);
+              toast.error('Terjadi kesalahan');
+            }
+
+            if (response.status === 'success') {
+              setIsAllSaldo(response.data);
+            }
+          }
+        }).catch((err) => {
+          console.error(err);
+        })
+      }
+    }
+  }, [setIsAllSaldo, isProfile])
+
+  useEffect(() => {
+    console.log(isAllSaldo);
+  }, [isAllSaldo]);
+
+  // ROW UNTUK ALL SALDO STAFF
+  const rowNumberSaldo = (row, column) => {
+    const rowIndex = isAllSaldo.indexOf(row) + 1;
+    return rowIndex;
+  }
+
+  const onGlobalFilterSaldoChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...isFilterSaldo };
+
+    _filters["global"].value = value;
+    setIsFilterSaldo(_filters);
+  }
+
+  const divisiItemTemplate = (option) => {
+    return (
+      <>
+        <Tag 
+          value={option}
+          style={{
+            backgroundColor: `${formatDivisiStaff(option).colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  const divisiFilterTemplate = (options) => {
+    return (
+      <Dropdown 
+        value={options.value}
+        options={divisi}
+        onChange={(e) => options.filterApplyCallback(e.value)}
+        itemTemplate={divisiItemTemplate}
+        placeholder="Select one..."
+        className="p-column-filter"
+        showClear
+        style={{ minWidth: '12rem' }}
+      />
+    )
+  }
+
+  const rowDivisiTemplate = (data) => {
+    const formatedDivisi = formatDivisiStaff(data?.divisi);
+    return (
+      <>
+        <Tag 
+          value={formatedDivisi.divisi}
+          style={{
+            backgroundColor: `${formatedDivisi.colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  // ROW UNTUK LIST WITHDRAW
 
   const rowNumberTemplate = (row, column) => {
     const rowIndex = isRequestData.indexOf(row) + 1;
@@ -245,7 +370,10 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     )
   }
 
+  // END ROW UNTUK LIST WITHDRAW
+
   const value = isFilter["global"] ? isFilter["global"].value : "";
+  const valueSaldo = isFilterSaldo["global"] ? isFilterSaldo["global"].value : "";
 
   return (
     <>
@@ -277,19 +405,19 @@ function ComponentOwner({ isProfile, setIsProfile }) {
             sx={{
               marginLeft: 2
             }}
-            onClick={() => setIsAllSaldoData(true)}
+            onClick={() => setIsModalSaldo(true)}
           >
             All Saldo Staff
           </Button>
 
           {/* MODAL ALL SALDO STAFF */}
           <Modal
-            open={isAllSaldoData}
+            open={isModalSaldo}
             onClose={(event, reason) => {
               if (reason && reason === 'backdropClick') {
                 return;
               }
-              setIsAllSaldoData(false);
+              setIsModalSaldo(false);
             }}
             sx={{
               zIndex: 1,
@@ -360,9 +488,11 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                     />
                     <InputText 
                       type="search"
+                      value={valueSaldo || ""}
                       placeholder="Search here..."
                       size='small'
                       style={{ fontSize: '14px' }}
+                      onChange={(e) => onGlobalFilterSaldoChange(e)}
                     />
                   </span>
                 </Grid>
@@ -371,6 +501,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                   md={12}
                 >
                   <DataTable
+                    value={isAllSaldo}
                     size="small"
                     scrollable
                     scrollHeight="500px"
@@ -379,15 +510,42 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                     rowsPerPageOptions={[5, 10, 25, 50, 100]}
                     removableSort
                     tableStyle={{
-                      minWidth: '50rem'
+                      minWidth: '50rem',
                     }}
+                    filters={isFilterSaldo}
+                    onFilter={(e) => setIsFilterSaldo(e.filters)}
                     emptyMessage="No result found staff"
                   >
                     <Column 
                       header="No"
                       footer="No"
+                      body={rowNumberSaldo}
                       style={{ width: '5%' }}
                       frozen
+                    />
+
+                    <Column 
+                      field="displayUsername"
+                      header="Staff"
+                      footer="Staff"
+                      sortable
+                      style={{
+                        width: '20%',
+                        fontWeight: 'bold'
+                      }}
+                    />
+
+                    <Column 
+                      field="divisi"
+                      header="Divisi"
+                      footer="Divisi"
+                      body={rowDivisiTemplate}
+                      sortable
+                      filter
+                      filterElement={divisiFilterTemplate}
+                      style={{
+                        width: '20%',
+                      }}
                     />
 
                   </DataTable>
