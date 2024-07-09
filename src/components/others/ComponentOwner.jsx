@@ -250,7 +250,8 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     const dataFetching = {
       userId: data?.displayId,
       startDate: data?.saldo[0].lastWithdraw,
-      endDate: new Date().toISOString()
+      endDate: new Date().toISOString(),
+      divisi: data?.divisi
     }
     if (isLoadingDetail.loading) {
       return;
