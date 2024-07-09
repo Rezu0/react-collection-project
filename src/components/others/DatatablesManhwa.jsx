@@ -363,6 +363,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   footer="Staff"
                   filter
                   sortable
+                  filterPlaceholder="Search staff..."
                   style={{ width: '25%', fontWeight: 'bold',  fontSize: '14px' }}
                 />
                 <Column 

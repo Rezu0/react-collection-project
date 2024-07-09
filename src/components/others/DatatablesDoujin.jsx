@@ -353,6 +353,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 footer="Staff"
                 sortable
                 filter
+                filterPlaceholder="Search staff..."
                 style={{
                   width: '20%',
                   fontWeight: 'bold'
