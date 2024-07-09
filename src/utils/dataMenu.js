@@ -93,7 +93,7 @@ export function formatDivisiStaff(divisi) {
   if (divisi === 'manhwa') {
     return {
       divisi: divisi,
-      colorBtn: '#b6242b'
+      colorBtn: '#e82e37'
     }
   }
 
