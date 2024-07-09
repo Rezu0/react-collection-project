@@ -18,7 +18,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
-import { handlerFetchingAllSaldoStaff } from '../../utils/handler-fetching';
+import { handlerFetchingAllSaldoStaff, handlerFetchingProveProject } from '../../utils/handler-fetching';
 import DialogProveProject from "../modal/DialogProveProject";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
@@ -28,6 +28,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const [isAllSaldo, setIsAllSaldo] = useState();
   const [isDialogProve, setIsDialogProve] = useState(false);
   const [isSendToDialog, setIsSendToDialog] = useState();
+  const [isDataProve, setIsDataProve] = useState(null);
   const [isLoadingDetail, setIsLoadingDetail] = useState({
     loading: false,
     id: null,
@@ -243,11 +244,27 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     )
   }
 
-  const handlerClickDetailProject = (data) => {
+  const handlerClickDetailProject = async (data) => {
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+    const dataFetching = {
+      userId: data?.displayId,
+      startDate: data?.saldo[0].lastWithdraw,
+      endDate: new Date().toISOString()
+    }
     if (isLoadingDetail.loading) {
       return;
     }
-
+    
+    const responseFetching = await handlerFetchingProveProject(parseStorage._token, dataFetching)
+    
+    if (!responseFetching.status && responseFetching.status === 'fail') {
+      console.error(responseFetching.message);
+      toast.error('Terjadi kesalahan saat ambil data Project');
+      return;
+    }
+    
+    setIsDataProve(responseFetching.data);
     setIsSendToDialog(data);
     setIsLoadingDetail({
       loading: true,
@@ -281,7 +298,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
               fontSize: '13px'
             }}
             loading={(isLoadingDetail.id === data?.displayId) ? isLoadingDetail.loading : false}
-            onClick={() => handlerClickDetailProject(data)}
+            onClick={async () => await handlerClickDetailProject(data)}
           >
             Detail Project
           </Button>
@@ -459,6 +476,8 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       setIsProfile={setIsProfile}
       isSendToDialog={isSendToDialog}
       setIsSendToDialog={setIsSendToDialog}
+      setIsDataProve={setIsDataProve}
+      isDataProve={isDataProve}
     />
     <Box
       sx={{
