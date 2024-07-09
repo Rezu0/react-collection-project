@@ -19,12 +19,15 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
 import { handlerFetchingAllSaldoStaff } from '../../utils/handler-fetching';
+import DialogProveProject from "../modal/DialogProveProject";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
   const [isModalSaldo, setIsModalSaldo] = useState(false);
   const [isRequestData, setIsRequestData] = useState();
   const [isAllSaldo, setIsAllSaldo] = useState();
+  const [isDialogProve, setIsDialogProve] = useState(false);
+  const [isSendToDialog, setIsSendToDialog] = useState();
   const [isLoadingDetail, setIsLoadingDetail] = useState({
     loading: false,
     id: null,
@@ -160,10 +163,6 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     }
   }, [setIsAllSaldo, isProfile])
 
-  useEffect(() => {
-    console.log(isAllSaldo);
-  }, [isAllSaldo]);
-
   // ROW UNTUK ALL SALDO STAFF
   const rowNumberSaldo = (row, column) => {
     const rowIndex = isAllSaldo.indexOf(row) + 1;
@@ -244,11 +243,31 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     )
   }
 
+  const handlerClickDetailProject = (data) => {
+    if (isLoadingDetail.loading) {
+      return;
+    }
+
+    setIsSendToDialog(data);
+    setIsLoadingDetail({
+      loading: true,
+      id: data?.displayId
+    });
+
+    setTimeout(() => {
+      setIsDialogProve(true);
+      setIsLoadingDetail({
+        loading: false,
+        id: null
+      });
+    }, 1000)
+  }
+
   const rowButtonSaldoStaff = (data) => {
     return (
       <>
         <Tooltip
-          title="Bukti Project & Saldo"
+          title="Bukti Project"
           variant="soft"
           color="danger"
           arrow
@@ -262,24 +281,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
               fontSize: '13px'
             }}
             loading={(isLoadingDetail.id === data?.displayId) ? isLoadingDetail.loading : false}
-            onClick={() => {
-
-              if (isLoadingDetail.loading) {
-                return;
-              }
-
-              setIsLoadingDetail({
-                loading: true,
-                id: data?.displayId
-              });
-
-              setTimeout(() => {
-                setIsLoadingDetail({
-                  loading: false,
-                  id: null
-                });
-              }, 1000)
-            }}
+            onClick={() => handlerClickDetailProject(data)}
           >
             Detail Project
           </Button>
@@ -451,6 +453,13 @@ function ComponentOwner({ isProfile, setIsProfile }) {
 
   return (
     <>
+    <DialogProveProject 
+      isOpenDialog={isDialogProve}
+      setIsOpenDialog={setIsDialogProve}
+      setIsProfile={setIsProfile}
+      isSendToDialog={isSendToDialog}
+      setIsSendToDialog={setIsSendToDialog}
+    />
     <Box
       sx={{
         flexGrow: 1
