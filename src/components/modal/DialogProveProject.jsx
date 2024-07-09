@@ -40,31 +40,65 @@ function DialogProveProject({
           width: '50vw'
         }}
       >
-        {(!isProject?.projects.length) ?
+        {(!isProject?.projectsDoujin) ? 
           <>
-            <Typography
-              noWrap
-              component="a"
-              sx={{
-                mr: 2,
-                display: { md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                color: 'inherit',
-                textDecoration: 'none',
-                fontSize: '15px'
-              }}
-            >
-              Tidak ada data / Staff sudah Withdraw
-            </Typography>
-            
-            {isProject?.users?.saldo[0].lastWithdraw }
-          </> :
-          isProject?.projects?.map((item) => (
-            <div key={item.uuid}>
-              {item.title}
-            </div>
-          ))
+            {/* INI ADALAH RENDER UNTUK STAFF MANHWA */}
+            {(!isProject?.projects.length) ?
+              <>
+                <Typography
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    display: { md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    fontSize: '15px'
+                  }}
+                >
+                  Tidak ada data / Staff sudah Withdraw
+                </Typography>
+                
+                {isProject?.users?.saldo[0].lastWithdraw }
+              </> :
+              isProject?.projects?.map((item) => (
+                <div key={item.uuid}>
+                  {item.title}
+                </div>
+              ))
+            }
+          </> : 
+          <>
+            {/* INI ADALAH RENDER UNTUK STAFF DOUJIN */}
+            {(!isProject?.projectsDoujin.length) ?
+              <>
+                <Typography
+                  noWrap
+                  component="a"
+                  sx={{
+                    mr: 2,
+                    display: { md: 'flex' },
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    fontSize: '15px'
+                  }}
+                >
+                  Tidak ada data / Staff sudah Withdraw
+                </Typography>
+                
+                {isProject?.users?.saldo[0].lastWithdraw }
+              </> :
+              isProject?.projectsDoujin?.map((item) => (
+                <div key={item.uuid}>
+                  {item.title}
+                </div>
+              ))
+            }
+          </>  
         }
       </Dialog>  
     </>
