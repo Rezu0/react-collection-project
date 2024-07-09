@@ -297,7 +297,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               variant="outlined"
               sx={{
                 width: '100%',
-                maxWidth: 1000,
+                maxWidth: 1100,
                 borderRadius: 'md',
                 p: 3,
                 boxShadow: 'lg',
