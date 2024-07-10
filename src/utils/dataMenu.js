@@ -136,3 +136,57 @@ export function formatDateForHuman(dateIso) {
 
   return 'Just now';
 }
+
+export function calculateDoujin(lang, totalPage) {
+  const doujinEng = 1000;
+  const doujinJP = 1500;
+
+  if (lang === 'eng') {
+    return totalPage * doujinEng;
+  }
+
+  return totalPage * doujinJP;
+}
+
+export function calculateManhwa(lang, totalCh, isNew) {
+  const manhwaNewEng = 15000;
+  const manhwaNewRaw = 20000;
+  const manhwaEng = 10000;
+  const manhwaRaw = 15000;
+
+  if (lang === 'eng') {
+    if (isNew == 1) {
+      return totalCh * manhwaNewEng;
+    }
+
+    return totalCh * manhwaEng;
+  }
+
+  if (lang === 'kor' || lang === 'spa' || lang === 'chn') {
+    if (isNew == 1) {
+      return totalCh * manhwaNewRaw;
+    }
+
+    return totalCh * manhwaRaw;
+  }
+}
+
+export function languageProject(lang) {
+  if (lang === 'eng') {
+    return 'English';
+  }
+
+  if (lang === 'kor') {
+    return 'Korea';
+  }
+
+  if (lang === 'spa') {
+    return 'Spain';
+  }
+
+  if (lang === 'jp') {
+    return 'Japan';
+  }
+
+  return 'China';
+}
