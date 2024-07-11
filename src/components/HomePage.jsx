@@ -12,6 +12,7 @@ import CardProfile from './others/CardProfile';
 import { showFormattedDate } from '../utils/dataMenu';
 import InputProject from './others/InputProject';
 import { Dialog } from 'primereact/dialog';
+import { handlerFetchingShowStatus } from '../utils/handler-fetching';
 
 const ItemGrid = styled(Paper)(({ theme }) => ({
   backgroundColor: '#e97991',
@@ -55,6 +56,7 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
   const [isInfoWihtdraw, setIsInfoWithdraw] = useState(0);
   const [isModalWithdraw, setIsModalWithdraw] = useState(false);
   const [isLoadingWihtdraw, setIsLoadingWithdraw] = useState(false);
+  const [isButtonWithdraw, setIsButtonWithdraw] = useState('off');
   const [isFormWithdraw, setIsFormWithdraw] = useState({
     userId: '',
     via: '',
@@ -136,6 +138,20 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
       }
     }
   }, [setIsInfoWithdraw])
+
+  useEffect(() => {
+    const responseStatusButton = async () => {
+      const response = await handlerFetchingShowStatus();
+      return response;
+    }
+
+    responseStatusButton().then((response) => {
+      setIsButtonWithdraw(response.status);
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Terjadi kesalahan!');
+    })
+  }, [setIsButtonWithdraw])
 
   const handleSelectVia = (event, newValue) => {
     setIsFormWithdraw((prevFormData) => ({
@@ -250,11 +266,37 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                     </Grid>
 
                     <Grid item="true" md={12}>
-                      {(isProfile === 0) ? 'Loading...' :
-                        <Tooltip 
-                          title={`Last Withdraw ${showFormattedDate(isProfile.amount[0].lastWithdraw)}`}
-                          followCursor
-                        >
+                      {(isButtonWithdraw === 'on') ? (
+                        <>
+                          {(isProfile === 0) ? 'Loading...' :
+                            <Tooltip 
+                              title={`Last Withdraw ${showFormattedDate(isProfile.amount[0].lastWithdraw)}`}
+                              followCursor
+                            >
+                              <Button
+                                fullWidth
+                                sx={{
+                                  fontSize: '17px',
+                                  backgroundColor: '#d1d1d1',
+                                  color: '#000000',
+                                  width: '100%'
+                                }}
+                                className='button-tarik'
+                                onClick={() => {
+                                  if (isInfoWihtdraw?.status == 'pending') {
+                                    toast.warn('Request Withdraw sedang dilakukan!')
+                                  }else {
+                                    setIsModalWithdraw(true)
+                                  }
+                                }}
+                              >
+                                Withdraw
+                              </Button>
+                            </Tooltip>
+                          }
+                        </>
+                      ) : (
+                        <>
                           <Button
                             fullWidth
                             sx={{
@@ -264,18 +306,11 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                               width: '100%'
                             }}
                             className='button-tarik'
-                            onClick={() => {
-                              if (isInfoWihtdraw?.status == 'pending') {
-                                toast.warn('Request Withdraw sedang dilakukan!')
-                              }else {
-                                setIsModalWithdraw(true)
-                              }
-                            }}
                           >
-                            Withdraw
+                            Belom waktunya Withdraw!
                           </Button>
-                        </Tooltip>
-                      }
+                        </>
+                      )}
                     </Grid>
                   </Grid>
                 </ItemGrid>
