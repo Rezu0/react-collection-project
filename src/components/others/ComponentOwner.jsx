@@ -3,6 +3,7 @@ import React from "react";
 import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
 import DatatablesManhwaOwner from "../datatables/DatatablesManhwaOwner";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { ToggleOff, ToggleOn } from "@mui/icons-material";
 import StorageIcon from '@mui/icons-material/Storage';
 import { useState } from "react";
 import { DataTable } from "primereact/datatable";
@@ -18,7 +19,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
-import { handlerFetchingAllSaldoStaff, handlerFetchingProveProject } from '../../utils/handler-fetching';
+import { handlerFetchingAllSaldoStaff, handlerFetchingButtonWithdraw, handlerFetchingProveProject, handlerFetchingShowStatus } from '../../utils/handler-fetching';
 import DialogProveProject from "../modal/DialogProveProject";
 import ButtonRefreshSaldoStaff from "./ButtonRefreshSaldoStaff";
 
@@ -30,6 +31,8 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const [isDialogProve, setIsDialogProve] = useState(false);
   const [isSendToDialog, setIsSendToDialog] = useState();
   const [isDataProve, setIsDataProve] = useState(null);
+  const [isButtonWithdraw, setIsButtonWithdraw] = useState('off');
+  const [isButtonWithdrawLoading, setIsButtonWithdrawLoading] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState({
     loading: false,
     id: null,
@@ -164,6 +167,20 @@ function ComponentOwner({ isProfile, setIsProfile }) {
       }
     }
   }, [setIsAllSaldo, isProfile])
+
+  useEffect(() => {
+    const responseStatusButton = async () => {
+      const response = await handlerFetchingShowStatus();
+      return response;
+    }
+
+    responseStatusButton().then((response) => {
+      setIsButtonWithdraw(response.status);
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Terjadi kesalahan!');
+    })
+  }, [setIsButtonWithdraw])
 
   // ROW UNTUK ALL SALDO STAFF
   const rowNumberSaldo = (row, column) => {
@@ -470,6 +487,37 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const value = isFilter["global"] ? isFilter["global"].value : "";
   const valueSaldo = isFilterSaldo["global"] ? isFilterSaldo["global"].value : "";
 
+  const handlerClickButtonWithdraw = async () => {
+    console.log(isProfile);
+    setIsButtonWithdrawLoading(true);
+    const storedToken = localStorage.getItem('loginState');
+    const parsedStorage = JSON.parse(storedToken);
+
+    const data = {
+      uuidButton: '1',
+      userId: isProfile?.displayId
+    };
+
+    if (storedToken) {
+      if (parsedStorage.state) {
+        const responseFetchingButton = await handlerFetchingButtonWithdraw(parsedStorage._token, data);
+
+        if (!responseFetchingButton.status && responseFetchingButton.status === 'fail') {
+          console.error(responseFetchingButton);
+          setIsButtonWithdrawLoading(false);
+          toast.error('Ada kesalahan untuk button On/Off');
+          return;
+        }
+
+        return setTimeout(() => {
+          setIsButtonWithdrawLoading(false)
+          setIsButtonWithdraw(responseFetchingButton.data.status)
+          toast.success('Withdraw staff berhasil di Aktifkan!');
+        }, 2000);
+      }
+    }
+  }
+
   return (
     <>
     <DialogProveProject 
@@ -513,6 +561,25 @@ function ComponentOwner({ isProfile, setIsProfile }) {
           >
             All Saldo Staff
           </Button>
+
+          <Tooltip
+            title="On/Off Button Withdraw Staff"
+            variant="soft"
+            color="danger"
+            arrow
+            placement="bottom"
+          >
+            <Button
+              variant="solid"
+              startDecorator={(isButtonWithdraw === 'off') ? <ToggleOff /> : <ToggleOn />}
+              color={(isButtonWithdraw === 'off') ? 'danger' : 'primary'}
+              sx={{ marginLeft: 2 }}
+              loading={isButtonWithdrawLoading}
+              onClick={handlerClickButtonWithdraw}
+            >
+              {isButtonWithdraw}
+            </Button>
+          </Tooltip>
 
           {/* MODAL ALL SALDO STAFF */}
           <Modal
