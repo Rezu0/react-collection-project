@@ -20,6 +20,7 @@ import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
 import { handlerFetchingAllSaldoStaff, handlerFetchingProveProject } from '../../utils/handler-fetching';
 import DialogProveProject from "../modal/DialogProveProject";
+import ButtonRefreshSaldoStaff from "./ButtonRefreshSaldoStaff";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
@@ -585,6 +586,9 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                   display='flex'
                   justifyContent='end'
                 >
+                  <ButtonRefreshSaldoStaff 
+                    setIsAllSaldo={setIsAllSaldo}
+                  />
                   <span className="p-input-icon-left">
                     <SearchIcon 
                       style={{ marginTop: '-11px' }}
