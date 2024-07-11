@@ -164,7 +164,7 @@ function DialogProveProject({
                       textAlign='center'
                       borderRight='1px solid #000000'
                     >
-                      {item.totalCh} Chapter ( {(item.isNew === 1) ? 'New' : 'Not New'} ) = {calculateManhwa(item.lang, item.totalCh, item.isNew)}
+                      {item.totalCh} Chapter ( {(item.isNew === 1) ? 'New' : 'Not New'} ) = {formatToCurrency(calculateManhwa(item.lang, item.totalCh, item.isNew))}
                     </Grid>
                     <Grid
                       md={5}
@@ -258,7 +258,7 @@ function DialogProveProject({
                       textAlign='center'
                       borderRight='1px solid #000000'
                     >
-                      {item.totalPage} Page = {calculateDoujin(item.lang, item.totalPage)}
+                      {item.totalPage} Page = {formatToCurrency(calculateDoujin(item.lang, item.totalPage))}
                     </Grid>
                     <Grid
                       md={5}
