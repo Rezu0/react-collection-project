@@ -488,7 +488,6 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const valueSaldo = isFilterSaldo["global"] ? isFilterSaldo["global"].value : "";
 
   const handlerClickButtonWithdraw = async () => {
-    console.log(isProfile);
     setIsButtonWithdrawLoading(true);
     const storedToken = localStorage.getItem('loginState');
     const parsedStorage = JSON.parse(storedToken);
@@ -512,7 +511,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
         return setTimeout(() => {
           setIsButtonWithdrawLoading(false)
           setIsButtonWithdraw(responseFetchingButton.data.status)
-          toast.success('Withdraw staff berhasil di Aktifkan!');
+          toast.success(`${isButtonWithdraw === 'off' ? 'Withdraw staff berhasil di Aktifkan!' : 'Withdraw staff berhasil di Non-Aktifkan!'}`);
         }, 2000);
       }
     }
