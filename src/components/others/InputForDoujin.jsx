@@ -121,12 +121,12 @@ function InputForDoujin({ isProfile, setIsProfile }) {
               color: '#ffffff'
             }}
           >
-            <h3>Title Doujin</h3>
+            <h3>Judul Doujin</h3>
           </FormLabel>
           <FormControl>
             <Input 
               type="text"
-              placeholder="Example: Hakari to Karane to IchaLove H suru HON"
+              placeholder="Contoh: Hakari to Karane to IchaLove H suru HON Chapter 10"
               size="md"
               name="title"
               variant="soft"
@@ -172,7 +172,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
               color: '#ffffff'
             }}
           >
-            <h3>Total Page</h3>
+            <h3>Berapa Page?</h3>
           </FormLabel>
           <FormControl>
             <Input 
@@ -197,7 +197,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
               color: '#ffffff'
             }}
           >
-            <h3>Language</h3>
+            <h3>Bahasa</h3>
           </FormLabel>
           <FormControl>
             <Select
@@ -231,7 +231,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
             onClick={handleSubmit}
             loading={isLoadingSubmit}
           >
-            Submit Project
+            KUMPUL PROJECT
           </Button>
         </Grid>
 

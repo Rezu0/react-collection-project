@@ -134,12 +134,12 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                 color: '#ffffff',
               }}
             >
-              <h2>Title</h2>
+              <h2>Judul Manhwa</h2>
             </FormLabel>
             <FormControl>
               <Input
                 type="text"
-                placeholder="Example: Queen Bee - ( 290 )"
+                placeholder="Contoh: Queen Bee Chapter 10"
                 size="md"
                 name="title"
                 variant="soft"
@@ -181,7 +181,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                     color: '#ffffff',
                   }}
                 >
-                  <h4>Total Chp</h4>
+                  <h4>Berapa Chapter?</h4>
                 </FormLabel>
                 <FormControl sx={{ marginTop: -1 }}>
                   <Input 
@@ -206,7 +206,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                     color: '#ffffff',
                   }}
                 >
-                  <h4>Language</h4>
+                  <h4>Bahasa</h4>
                 </FormLabel>
                 <FormControl sx={{ marginTop: -1 }}>
                   <Select 
@@ -236,7 +236,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                     color: '#ffffff',
                   }}
                 >
-                  <h4>Is New?</h4>
+                  <h4>New/Tidak</h4>
                 </FormLabel>
                 <FormControl sx={{ marginTop: -1 }}>
                   <Select
@@ -262,7 +262,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               }}
               loading={isLoadingManhwa}
             >
-              Submit Project
+              KUMPUL PROJECT
             </Button>
             <Button 
               color="primary"
