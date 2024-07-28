@@ -70,7 +70,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
             redirect: 'follow'
           };
 
-          fetch(`${LINK_API}api/manhwa`, headersOptions)
+          fetch(`${LINK_API}api/manhwa/byuser`, headersOptions)
             .then((response) => response.json())
             .then((result) => {
               // toast.success('Data berhasil load!')
@@ -298,22 +298,6 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                     fontSize: '14px'
                   }}
                 />
-                {/* BUTTON JUST ME */}
-                <Button 
-                  sx={{
-                    marginLeft: '10px'
-                  }}
-                  color="warning"
-                  variant="soft"
-                  onClick={() => {
-                    let _filters = { ...isFilter };
-
-                    _filters['global'].value = isProfile.displayUsername;
-                    setIsFilter(_filters); 
-                  }}
-                >
-                  Just Me!
-                </Button>
               </span>
             </Grid>
             <Grid
