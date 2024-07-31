@@ -4,6 +4,7 @@ import { Paper, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AccessTimeFilledOutlinedIcon from '@mui/icons-material/AccessTimeFilledOutlined';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { LINK_API } from '../utils/config.json';
@@ -12,7 +13,9 @@ import CardProfile from './others/CardProfile';
 import { showFormattedDate } from '../utils/dataMenu';
 import InputProject from './others/InputProject';
 import { Dialog } from 'primereact/dialog';
-import { handlerFetchingShowStatus } from '../utils/handler-fetching';
+import { handlerFetchingHistory, handlerFetchingShowStatus } from '../utils/handler-fetching';
+import ModalHistoryWithdraw from './modal/ModalHistoryWithdraw';
+import { Tag } from 'primereact/tag';
 
 const ItemGrid = styled(Paper)(({ theme }) => ({
   backgroundColor: '#e97991',
@@ -57,6 +60,8 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
   const [isModalWithdraw, setIsModalWithdraw] = useState(false);
   const [isLoadingWihtdraw, setIsLoadingWithdraw] = useState(false);
   const [isButtonWithdraw, setIsButtonWithdraw] = useState('off');
+  const [isOpenHistory, setIsOpenHistory] = useState(false);
+  const [isDataHistory, setIsDataHistory] = useState(null);
   const [isFormWithdraw, setIsFormWithdraw] = useState({
     userId: '',
     via: '',
@@ -208,6 +213,30 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
         setIsLoadingWithdraw(false);
         console.error(err);
       })
+  }
+
+  const handlerOnClickHistory = () => {
+    setIsOpenHistory(true)
+    const storedToken = localStorage.getItem('loginState');
+    const parsedStorage = JSON.parse(storedToken);
+
+    const responseFetchingHistory = async () =>{
+      const response = await handlerFetchingHistory(parsedStorage._token);
+      return response;
+    }
+    
+    responseFetchingHistory().then((response) => {
+      if (!response.status || response.status === 'fail') {
+        console.error(response);
+        toast.error('Terjadi kesalahan History Withdraw!');
+        return;
+      }
+      
+      setIsDataHistory(response.data)
+    }).catch((err) => {
+      console.error(err);
+      toast.error('Terjadi kesalahan data History withdraw!')
+    })
   }
 
   return (
@@ -362,61 +391,136 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                       {(isProfile === 0) ? 'Loading...' : 
                         (isInfoWihtdraw?.status === 'pending') ? 
                         <>
-                          <Typography
-                            fontSize='13px'
-                            color='#ffffff'
-                            fontFamily='Titillium Web'
-                            sx={{
-                              backgroundColor: 'limegreen',
-                              padding: '3px 10px',
-                              borderRadius: '10px',
-                              margin: '0px 3px'
-                            }}
-                          >
-                            {formatToCurrency(isInfoWihtdraw?.amount)}
-                          </Typography>
+                          {(isXs) 
+                          ? 
+                            <>
+                              <Grid 
+                                container
+                                spacing={1}
+                                sx={{
+                                  flexGrow: 1
+                                }}
+                              >
+                                <Grid xs={3}>
+                                  <Tag 
+                                    value={formatToCurrency(isInfoWihtdraw?.amount)}
+                                    style={{
+                                      backgroundColor: 'limegreen',
+                                      padding: '3px 10px',
+                                      borderRadius: '10px',
+                                      margin: '0px 3px',
+                                      fontFamily: 'Titillium Web',
+                                      fontSize: '13px',
+                                      maxHeight: '25px',
+                                      maxWidth: '100px'
+                                    }}
+                                  />
+                                </Grid>
+                                <Grid xs={2}>
+                                  <Tag 
+                                    value={isInfoWihtdraw?.via}
+                                    style={{
+                                      backgroundColor: '#4c2a86',
+                                      padding: '3px 10px',
+                                      borderRadius: '10px',
+                                      margin: '0px 3px',
+                                      fontFamily: 'Titillium Web',
+                                      fontSize: '13px',
+                                      maxHeight: '25px',
+                                      maxWidth: '100px',
+                                      marginLeft: '10px'
+                                    }}
+                                  />
+                                </Grid>
 
-                          <Typography
-                            fontSize='13px'
-                            color='#ffffff'
-                            fontFamily='Titillium Web'
-                            sx={{
-                              backgroundColor: '#4c2a86',
-                              padding: '3px 10px',
-                              borderRadius: '10px',
-                              margin: '0px 3px'
-                            }}
-                          >
-                            {isInfoWihtdraw?.via}
-                          </Typography>
+                                <Grid xs={6}>
+                                  <Tag 
+                                    value={isInfoWihtdraw?.nomor}
+                                    style={{
+                                      backgroundColor: '#000000',
+                                      padding: '3px 10px',
+                                      borderRadius: '10px',
+                                      margin: '0px 3px',
+                                      fontFamily: 'Titillium Web',
+                                      fontSize: '13px',
+                                      maxHeight: '25px',
+                                      maxWidth: '100px',
+                                      marginLeft: '10px'
+                                    }}
+                                  />
+                                </Grid>
 
-                          <Typography
-                            fontSize='13px'
-                            fontFamily='Titillium Web'
-                            sx={{
-                              backgroundColor: '#ebebeb',
-                              padding: '3px 10px',
-                              borderRadius: '10px',
-                              margin: '0px 3px',
-                              color: '#000000'
-                            }}
-                          >
-                            {showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
-                          </Typography>
-
-                          <Typography
-                            fontSize='13px'
-                            fontFamily='Titillium Web'
-                            sx={{
-                              backgroundColor: '#000000',
-                              padding: '3px 10px',
-                              borderRadius: '10px',
-                              margin: '0px 3px',
-                              color: '#ffffff'
-                            }}
-                          >
-                            {isInfoWihtdraw?.nomor}
-                          </Typography>
+                                <Grid xs={6}>
+                                  <Tag 
+                                    value={showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
+                                    style={{
+                                      backgroundColor: '#ebebeb',
+                                      padding: '3px 10px',
+                                      borderRadius: '10px',
+                                      margin: '0px 3px',
+                                      fontFamily: 'Titillium Web',
+                                      fontSize: '13px',
+                                      color: '#000000'
+                                    }}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </>
+                          : 
+                            <>
+                              <Tag 
+                                value={formatToCurrency(isInfoWihtdraw?.amount)}
+                                style={{
+                                  backgroundColor: 'limegreen',
+                                  padding: '3px 10px',
+                                  borderRadius: '10px',
+                                  margin: '0px 3px',
+                                  fontFamily: 'Titillium Web',
+                                  fontSize: '13px',
+                                  maxHeight: '25px',
+                                  maxWidth: '100px'
+                                }}
+                              />
+                              <Tag 
+                                value={isInfoWihtdraw?.via}
+                                style={{
+                                  backgroundColor: '#4c2a86',
+                                  padding: '3px 10px',
+                                  borderRadius: '10px',
+                                  margin: '0px 3px',
+                                  fontFamily: 'Titillium Web',
+                                  fontSize: '13px',
+                                  maxHeight: '25px',
+                                  maxWidth: '100px'
+                                }}
+                              />
+                              <Tag 
+                                value={isInfoWihtdraw?.nomor}
+                                style={{
+                                  backgroundColor: '#000000',
+                                  padding: '3px 10px',
+                                  borderRadius: '10px',
+                                  margin: '0px 3px',
+                                  fontFamily: 'Titillium Web',
+                                  fontSize: '13px',
+                                  maxHeight: '25px',
+                                  maxWidth: '100px'
+                                }}
+                              />
+                              <Tag 
+                                value={showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
+                                style={{
+                                  backgroundColor: '#ebebeb',
+                                  padding: '3px 10px',
+                                  borderRadius: '10px',
+                                  margin: '0px 3px',
+                                  fontFamily: 'Titillium Web',
+                                  fontSize: '13px',
+                                  color: '#000000'
+                                }}
+                              />
+                            </>
+                          }
                         </>
                     : (
                       <Typography
@@ -443,19 +547,22 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                         flexDirection: 'row'
                       }}
                     >
-                      {(isProfile === 0) ? 'Loading...' :
-                        <Button
-                        fullWidth
-                        sx={{
-                          fontSize: '17px',
-                          backgroundColor: (isInfoWihtdraw?.status === 'pending') ? '#ffca2c' : (isInfoWihtdraw?.status === 'success') ? '#22bf76' : '#5c636a',
-                          color: '#000000',
-                          width: '100%'
-                        }}
-                        className='button-status'
-                      >
-                        {(isInfoWihtdraw?.status == undefined) ? 'None' :  upperCaseStatus(isInfoWihtdraw?.status)}
-                      </Button>
+                      {(isProfile === 0) ? 'Loading...' : 
+                        <>
+                          <Button
+                            fullWidth
+                            sx={{
+                              fontSize: '17px',
+                              backgroundColor: '#2d2f39',
+                              color: '#ffffff',
+                              width: '100%'
+                            }}
+                            startDecorator={<ReceiptLongIcon />}
+                            onClick={handlerOnClickHistory}
+                          >
+                            Status/Riwayat Withdraw
+                          </Button>
+                        </>
                       }
                     </Grid>
                   </Grid>
@@ -604,6 +711,13 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
         </form>
         </Sheet>
       </Modal>
+
+      <ModalHistoryWithdraw 
+        isOpenHistory={isOpenHistory}
+        setIsOpenHistory={setIsOpenHistory}
+        setIsDataHistory={setIsDataHistory}
+        isDataHistory={isDataHistory}
+      />
       
       <ToastContainer
           theme='dark'
