@@ -67,7 +67,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             redirect: 'follow'
           };
 
-          fetch(`${LINK_API}api/doujin`, headersOptions)
+          fetch(`${LINK_API}api/doujin/byuser`, headersOptions)
             .then((response) => response.json())
             .then((result) => {
               setIsDataTable(result.data);
