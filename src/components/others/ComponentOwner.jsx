@@ -20,7 +20,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import RefreshListWithdraw from "./RefreshListWithdraw";
-import { handlerFetchingAllSaldoStaff, handlerFetchingButtonWithdraw, handlerFetchingProveProject, handlerFetchingShowStatus } from '../../utils/handler-fetching';
+import { handlerFetchingAllSaldoStaff, handlerFetchingButtonWithdraw, handlerFetchingProveProject, handlerFetchingShowStatus, handlerFetchingHistoryOwner } from '../../utils/handler-fetching';
 import DialogProveProject from "../modal/DialogProveProject";
 import ButtonRefreshSaldoStaff from "./ButtonRefreshSaldoStaff";
 import ModalHistoryOwner from "../modal/ModalHistoryOwner";
@@ -36,6 +36,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const [isButtonWithdraw, setIsButtonWithdraw] = useState('off');
   const [isButtonWithdrawLoading, setIsButtonWithdrawLoading] = useState(false);
   const [isModalHistoryWithdraw, setIsModalHistoryWithdraw] = useState(false);
+  const [isDataHistoryOwner, setIsDataHistoryOwner] = useState();
   const [isLoadingDetail, setIsLoadingDetail] = useState({
     loading: false,
     id: null,
@@ -520,6 +521,28 @@ function ComponentOwner({ isProfile, setIsProfile }) {
     }
   }
 
+  const handlerClickHistoryOwner = async () => {
+    setIsModalHistoryWithdraw(true)
+    const storedToken = localStorage.getItem('loginState');
+    const parseStorage = JSON.parse(storedToken);
+
+    if (storedToken) {
+      if (parseStorage.state) {
+        const responseHistoryOwner = async () => {
+          const response = await handlerFetchingHistoryOwner(parseStorage._token);
+          return response;
+        }
+
+        responseHistoryOwner().then((response) => {
+          setIsDataHistoryOwner(response.data);
+        }).catch((err) => {
+          console.error(err);
+          toast.error('Terjadi kesalahan!');
+        })
+      }
+    }
+  }
+
   return (
     <>
     <DialogProveProject 
@@ -574,7 +597,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
             sx={{
               marginLeft: 2
             }}
-            onClick={() => setIsModalHistoryWithdraw(true)}
+            onClick={async () => await handlerClickHistoryOwner()}
           >
             Riwayat Withdraw Staff
           </Button>
@@ -602,6 +625,8 @@ function ComponentOwner({ isProfile, setIsProfile }) {
           <ModalHistoryOwner 
             setIsModalHistoryWithdraw={setIsModalHistoryWithdraw}
             isModalHistoryWithdraw={isModalHistoryWithdraw}
+            setIsDataHistoryOwner={setIsDataHistoryOwner}
+            isDataHistoryOwner={isDataHistoryOwner}
           />
 
           {/* MODAL ALL SALDO STAFF */}
