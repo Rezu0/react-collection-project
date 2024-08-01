@@ -106,3 +106,24 @@ export async function handlerFetchingHistory(token) {
     throw err;
   }
 }
+
+export async function handlerFetchingHistoryOwner(token) {
+  const headersHistoryOwner = new Headers();
+  headersHistoryOwner.append("Content-Type", "application/json");
+  headersHistoryOwner.append("Authorization", `Bearer ${token}`);
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headersHistoryOwner,
+    redirect: 'follow',
+  };
+
+  try {
+    const responseFetchingHistoryOwner = await fetch(`${LINK_API}api/withdraw/history`, requestOptions);
+    const returnData = await responseFetchingHistoryOwner.json();
+    return returnData;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
