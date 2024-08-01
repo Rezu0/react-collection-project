@@ -1,12 +1,94 @@
-import { Grid, Modal, ModalClose, Sheet, Typography } from "@mui/joy";
+import { Grid, Modal, ModalClose, Sheet, Tooltip, Typography } from "@mui/joy";
 import SearchIcon from '@mui/icons-material/Search';
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
+import { useState } from "react";
+import { useEffect } from "react";
+import { Column } from "primereact/column";
+import { formatDateForHuman, formatDivisiStaff, formatToCurrency, formatViaWithdraw, showFormatDateReadable } from "../../utils/dataMenu";
+import { Tag } from "primereact/tag";
 
 function ModalHistoryOwner({
   setIsModalHistoryWithdraw,
-  isModalHistoryWithdraw
+  isModalHistoryWithdraw,
+  setIsDataHistoryOwner,
+  isDataHistoryOwner
 }) {
+
+  const [isDataHistoryComponent, setIsDataHistoryComponent] = useState();
+
+  useEffect(() => {
+    setIsDataHistoryComponent(isDataHistoryOwner);
+  }, [setIsDataHistoryComponent, isDataHistoryOwner]);
+
+  const rowNumberSaldo = (row, column) => {
+    const rowIndex = isDataHistoryComponent.indexOf(row) + 1;
+    return rowIndex;
+  }
+
+  const rowDivisiTemplate = (data) => {
+    const formatedDivisi = formatDivisiStaff(data?.user?.divisi);
+    return (
+      <>
+        <Tag 
+          value={formatedDivisi.divisi}
+          style={{
+            backgroundColor: `${formatedDivisi.colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  const rowAmountSaldoStaffTemplate = (data) => {
+    return `${formatToCurrency(data?.amount)}`;
+  }
+
+  const rowStatusWithdrawTemplate = (data) => {
+    return (
+      <>
+        <Tag 
+          value={(data?.status === 'success') ? 'Success' : 'Pending'}
+          style={{
+            backgroundColor: '#22c55e'
+          }}
+        />
+      </>
+    )
+  }
+
+  const rowDateWithdrawTemplate = (data) => {
+    return (
+      <>
+        <Tooltip
+          title={showFormatDateReadable(data?.dateWithdraw)}
+          arrow
+          placement="top"
+        >
+          <Typography>
+            {formatDateForHuman(data?.dateWithdraw)}
+          </Typography>
+        </Tooltip>
+      </>
+    )
+  }
+
+  const rowViaTemplate = (data) => {
+    const formatedVia = formatViaWithdraw(data?.via);
+    return (
+      <>
+        <Tag 
+          value={formatedVia.via}
+          style={{
+            backgroundColor: `${formatedVia.colorBtn}`
+          }}
+        />
+      </>
+    )
+  }
+
+  console.log(isDataHistoryComponent);
+
   return (
     <Modal
       open={isModalHistoryWithdraw}
@@ -20,7 +102,8 @@ function ModalHistoryOwner({
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        zIndex: 1,
       }}
     >
       <Sheet
@@ -28,7 +111,7 @@ function ModalHistoryOwner({
         sx={{
           p: 3,
           width: '100%',
-          maxWidth: 1000,
+          maxWidth: 1100,
           borderRadius: 'md',
           boxShadow: 'lg',
           height: 'auto'
@@ -92,9 +175,10 @@ function ModalHistoryOwner({
                 md={12}
               >
                 <DataTable
+                  value={isDataHistoryComponent}
                   size="small"
                   scrollable
-                  scrollHeight="500px"
+                  scrollHeight="400px"
                   rows={10}
                   paginator
                   rowsPerPageOptions={[5, 10, 25, 50, 100]}
@@ -104,7 +188,72 @@ function ModalHistoryOwner({
                   }}
                   emptyMessage="Tidak ada data withdraw"
                 >
+                  <Column 
+                    header="No"
+                    footer="No"
+                    body={rowNumberSaldo}
+                    style={{ width: '5%' }}
+                    frozen
+                  />
 
+                  <Column 
+                    field="user.displayUsername"
+                    header="Staff"
+                    footer="Staff"
+                    sortable
+                    filter
+                    style={{
+                      width: '20%',
+                      fontWeight: 'bold'
+                    }}
+                  />
+
+                  <Column 
+                    field="user"
+                    header="Divisi"
+                    footer="Divisi"
+                    body={rowDivisiTemplate}
+                    filter
+                    style={{
+                      width: '20%',
+                    }}
+                  />
+
+                  <Column 
+                    header="Amount"
+                    footer="Amount"
+                    body={rowAmountSaldoStaffTemplate}
+                    sortable
+                    style={{
+                      width: '20%'
+                    }}
+                  />
+
+                  <Column 
+                    header="Via"
+                    footer="Via"
+                    body={rowViaTemplate}
+                    style={{
+                      width: '20%'
+                    }}
+                  />
+
+                  <Column 
+                    header="Status"
+                    footer="Status"
+                    body={rowStatusWithdrawTemplate}
+                    sortable
+                    style={{
+                      width: '20%'
+                    }}
+                  />
+
+                  <Column 
+                    header="Date Withdraw"
+                    footer="Date Withdraw"
+                    body={rowDateWithdrawTemplate}
+                    sortable
+                  />
                 </DataTable>
               </Grid>
           </Grid>
