@@ -3,6 +3,7 @@ import React from "react";
 import DatatablesDoujinOwner from "../datatables/DatatablesDoujinOwner";
 import DatatablesManhwaOwner from "../datatables/DatatablesManhwaOwner";
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { ToggleOff, ToggleOn } from "@mui/icons-material";
 import StorageIcon from '@mui/icons-material/Storage';
 import { useState } from "react";
@@ -22,6 +23,7 @@ import RefreshListWithdraw from "./RefreshListWithdraw";
 import { handlerFetchingAllSaldoStaff, handlerFetchingButtonWithdraw, handlerFetchingProveProject, handlerFetchingShowStatus } from '../../utils/handler-fetching';
 import DialogProveProject from "../modal/DialogProveProject";
 import ButtonRefreshSaldoStaff from "./ButtonRefreshSaldoStaff";
+import ModalHistoryOwner from "../modal/ModalHistoryOwner";
 
 function ComponentOwner({ isProfile, setIsProfile }) {
   const [isModalRequest, setIsModalRequest] = useState(false);
@@ -33,6 +35,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
   const [isDataProve, setIsDataProve] = useState(null);
   const [isButtonWithdraw, setIsButtonWithdraw] = useState('off');
   const [isButtonWithdrawLoading, setIsButtonWithdrawLoading] = useState(false);
+  const [isModalHistoryWithdraw, setIsModalHistoryWithdraw] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState({
     loading: false,
     id: null,
@@ -540,6 +543,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
         <Grid
           md={12}
         >
+          {/* BUTTON ALL LIST WITHDRAW STAFF */}
           <Button
             variant="solid"
             color="primary"
@@ -549,6 +553,7 @@ function ComponentOwner({ isProfile, setIsProfile }) {
             List Withdraw
           </Button>
 
+          {/* BUTTON ALL SALDO STAFF */}
           <Button
             variant="solid"
             color="primary"
@@ -561,6 +566,20 @@ function ComponentOwner({ isProfile, setIsProfile }) {
             All Saldo Staff
           </Button>
 
+          {/* BUTTON ALL HISTORY WITHDRAW STAFF */}
+          <Button
+            variant="solid"
+            color="primary"
+            startDecorator={<ReceiptLongIcon />}
+            sx={{
+              marginLeft: 2
+            }}
+            onClick={() => setIsModalHistoryWithdraw(true)}
+          >
+            Riwayat Withdraw Staff
+          </Button>
+
+          {/* BUTTON ON OFF WITHDRAW */}
           <Tooltip
             title="On/Off Button Withdraw Staff"
             variant="soft"
@@ -579,6 +598,11 @@ function ComponentOwner({ isProfile, setIsProfile }) {
               {isButtonWithdraw}
             </Button>
           </Tooltip>
+
+          <ModalHistoryOwner 
+            setIsModalHistoryWithdraw={setIsModalHistoryWithdraw}
+            isModalHistoryWithdraw={isModalHistoryWithdraw}
+          />
 
           {/* MODAL ALL SALDO STAFF */}
           <Modal
