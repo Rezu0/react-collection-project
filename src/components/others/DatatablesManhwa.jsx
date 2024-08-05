@@ -326,8 +326,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 />
                 <Column 
                   field="title"
-                  header="Title"
-                  footer="Title"
+                  header="Judul"
+                  footer="Judul"
                   sortable
                   filter
                   filterPlaceholder="Search..."
@@ -336,8 +336,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 />
                 <Column 
                   field="totalCh"
-                  header="Total Chp & Lang"
-                  footer="Total Chp & Lang"
+                  header="Total Chapter & Bahasa"
+                  footer="Total Chapter & Bahasa"
                   body={totalChpAndLang}
                   style={{ width: '25%', fontSize: '14px' }}
                 />
@@ -352,16 +352,16 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 />
                 <Column 
                   field="isNew"
-                  header="Is New?"
-                  footer="Is New?"
+                  header="New/Tidak?"
+                  footer="New/Tidak?"
                   sortable
                   body={tagIsNewTemplate}
                   style={{ fontSize: '14px' }}
                 />
                 <Column 
                   field="insertedAt"
-                  header="Date Input"
-                  footer="Date Input"
+                  header="Tanggal Input"
+                  footer="Tanggal Input"
                   sortable
                   body={dateInsertedAt}
                   style={{ width: '25%', fontSize: '14px' }}
