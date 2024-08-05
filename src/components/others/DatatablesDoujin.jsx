@@ -9,7 +9,7 @@ import { Box, Button, Grid, IconButton, Tooltip, Typography } from "@mui/joy";
 import SearchIcon from '@mui/icons-material/Search';
 import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
-import { showFormatDatatable } from "../../utils/dataMenu";
+import { formatDateForHuman, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Tag } from "primereact/tag";
@@ -140,7 +140,20 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
   }
 
   const rowDateInsertedAt = (data) => {
-    return `${showFormatDatatable(data.insertedAt)}`;
+    return (
+      <>
+        <Tooltip
+          title={showFormatDateReadable(data.insertedAt)}
+          arrow
+          color="success"
+          variant="soft"
+        >
+          <Typography>
+            {formatDateForHuman(data.insertedAt)}
+          </Typography>
+        </Tooltip>
+      </>
+    );
   }
 
   const rowLinkButtonTempate = (data) => {
@@ -287,16 +300,6 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 }}
                 onChange={(e) => onGlobalFilterChange(e)}
               />
-              <Button
-                sx={{
-                  marginLeft: '10px'
-                }}
-                color="warning"
-                variant="soft"
-                onClick={onClickJustMe}
-              >
-                Just Me!
-              </Button>
             </span>
           </Grid>
           <Grid
@@ -325,8 +328,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 frozen
               />
               <Column 
-                header="Title"
-                footer="Title"
+                header="Judul"
+                footer="Judul"
                 field="title"
                 sortable
                 filter
@@ -339,8 +342,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 body={rowTitleTemplate}
               />
               <Column 
-                header="Total Page & Lang"
-                footer="Total Page & Lang"
+                header="Total Page & Bahasa"
+                footer="Total Page & Bahasa"
                 body={rowTotalPageAndLang}
                 style={{
                   width: '25%',
@@ -361,8 +364,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               />
               <Column 
                 field="insertedAt"
-                header="Date Input"
-                footer="Date Input"
+                header="Tanggal Input"
+                footer="Tanggal Input"
                 sortable
                 body={rowDateInsertedAt}
                 style={{
