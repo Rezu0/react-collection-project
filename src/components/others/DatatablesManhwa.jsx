@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { LINK_API } from '../../utils/config.json';
-import { showFormatDatatable, isNew } from '../../utils/dataMenu';
+import { showFormatDatatable, isNew, showFormatDateReadable, showFormattedDate, formatDateForHuman } from '../../utils/dataMenu';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -111,7 +111,20 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
   }
 
   const dateInsertedAt = (data) => {
-    return `${showFormatDatatable(data.insertedAt)}`;
+    return (
+      <>
+        <Tooltip
+          title={showFormatDateReadable(data.insertedAt)}
+          arrow
+          color="success"
+          variant="soft"
+        >
+          <Typography>
+            {formatDateForHuman(data.insertedAt)}
+          </Typography>
+        </Tooltip>
+      </>
+    );
   }
 
   const totalChpAndLang = (data) => {
