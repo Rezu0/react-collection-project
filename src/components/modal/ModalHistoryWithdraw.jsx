@@ -69,7 +69,7 @@ function ModalHistoryWithdraw({
           >
             {(!isDataHistoryComponent) ? 'Loading...' : 
                 <>
-                  {(isDataHistoryComponent.length === 0) ? 'Data Withdraw kosong!' : ''}
+                  {(isDataHistoryComponent.length === 0) ? 'Status/Riwayat Withdraw kosong!' : ''}
                   {isDataHistoryComponent.map((item) => (
                     <Grid 
                       xs={12} 
