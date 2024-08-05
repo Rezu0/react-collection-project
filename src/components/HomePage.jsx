@@ -176,6 +176,14 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
 
   const handleSubmitRequest = () => {
     setIsLoadingWithdraw(true);
+    if (isProfile?.amount[0].amount == 0) {
+      toast.error('Limit withdraw diatas Rp 0')
+
+      setTimeout(() => {
+        setIsLoadingWithdraw(false)
+      }, 500)
+      return;
+    }
     const storedToken = localStorage.getItem('loginState');
     const parseStorage = JSON.parse(storedToken);
 
