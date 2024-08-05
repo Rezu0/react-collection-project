@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { Column } from "primereact/column";
 import { formatDateForHuman, formatDivisiStaff, formatToCurrency, formatViaWithdraw, showFormatDateReadable } from "../../utils/dataMenu";
 import { Tag } from "primereact/tag";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
 
 function ModalHistoryOwner({
   setIsModalHistoryWithdraw,
@@ -16,6 +17,17 @@ function ModalHistoryOwner({
 }) {
 
   const [isDataHistoryComponent, setIsDataHistoryComponent] = useState();
+  const [isFilterHistoryComponent, setIsFilterComponent] = useState({
+    "user.displayUsername": {
+      operator: FilterOperator.AND,
+      constraints: [
+        {
+          value: null,
+          matchMode: FilterMatchMode.CONTAINS,
+        },
+      ],
+    },
+  });
 
   useEffect(() => {
     setIsDataHistoryComponent(isDataHistoryOwner);
@@ -87,7 +99,15 @@ function ModalHistoryOwner({
     )
   }
 
-  console.log(isDataHistoryComponent);
+  const onUsernameFilter = (event) => {
+    const value = event.target.value;
+    let _filters = { ...isFilterHistoryComponent }
+
+    _filters["user.displayUsername"].constraints[0].value = value;
+    setIsFilterComponent(_filters);
+  }
+
+  const value = isFilterHistoryComponent["user.displayUsername"] ? isFilterHistoryComponent["user.displayUsername"].constraints[0].value : "";
 
   return (
     <Modal
@@ -163,10 +183,11 @@ function ModalHistoryOwner({
                   <SearchIcon sx={{ marginTop: '-11px' }} />
                   <InputText 
                     type="search"
-                    value=""
-                    placeholder="Search here..."
+                    value={value || ""}
+                    placeholder="Search staff..."
                     size="small"
                     style={{ fontSize: '14px' }}
+                    onChange={(e) => onUsernameFilter(e)}
                   />
                 </span>
               </Grid>
@@ -186,6 +207,8 @@ function ModalHistoryOwner({
                   tableStyle={{
                     minWidth: '50rem'
                   }}
+                  filters={isFilterHistoryComponent}
+                  onFilter={(e) => setIsFilterComponent(e.filters)}
                   emptyMessage="Tidak ada data withdraw"
                 >
                   <Column 
@@ -202,6 +225,7 @@ function ModalHistoryOwner({
                     footer="Staff"
                     sortable
                     filter
+                    filterPlaceholder="Search staff..."
                     style={{
                       width: '20%',
                       fontWeight: 'bold'
@@ -213,13 +237,13 @@ function ModalHistoryOwner({
                     header="Divisi"
                     footer="Divisi"
                     body={rowDivisiTemplate}
-                    filter
                     style={{
                       width: '20%',
                     }}
                   />
 
-                  <Column 
+                  <Column
+                    field="amount"
                     header="Amount"
                     footer="Amount"
                     body={rowAmountSaldoStaffTemplate}
@@ -242,13 +266,13 @@ function ModalHistoryOwner({
                     header="Status"
                     footer="Status"
                     body={rowStatusWithdrawTemplate}
-                    sortable
                     style={{
                       width: '20%'
                     }}
                   />
 
                   <Column 
+                    field="dateWithdraw"
                     header="Date Withdraw"
                     footer="Date Withdraw"
                     body={rowDateWithdrawTemplate}
