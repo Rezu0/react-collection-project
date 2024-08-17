@@ -382,7 +382,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 filter
                 filterPlaceholder="Search..."
                 style={{
-                  width: '40%',
+                  width: '35%',
                   fontWeight: 'bold',
                   fontSize: '14px'
                 }}
@@ -393,7 +393,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 header="Total Page"
                 field="totalPage"
                 style={{
-                  width: '10%',
+                  width: '5%',
                   fontSize: '14px'
                 }}
               />
@@ -403,7 +403,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 field="lang"
                 body={rowTotalLang}
                 style={{
-                  width: '10%',
+                  width: '13%',
                   fontSize: '14px'
                 }}
               />
@@ -412,14 +412,14 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 header="Link"
                 body={rowLinkButtonTempate}
                 style={{
-                  width: '25%'
+                  width: '15%'
                 }}
               />
               <Column 
                 header="Action"
                 body={rowActionTemplate}
                 style={{
-                  width: '55%'
+                  width: '35%'
                 }}
               />
             </DataTable>
