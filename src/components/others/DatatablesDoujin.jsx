@@ -15,10 +15,13 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Tag } from "primereact/tag";
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Delete } from "@mui/icons-material";
 import ModalEditDoujin from "../modal/ModalEditDoujin";
 import DialogDeleteDoujin from "../modal/DialogDeleteDoujin";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { countries } from 'country-flag-icons';
+import { GB, ID, JP } from "country-flag-icons/react/3x2";
 
 function DatatablesDoujin({ isProfile, setIsProfile }) {
   const [isDataTable, setIsDataTable] = useState();
@@ -129,16 +132,23 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
     )
   }
 
-  const rowTotalPageAndLang = (data) => {
-    let lang;
+  const rowTotalLang = (data) => {
+    let flag;
+  
+    // Tentukan bahasa dan ikon bendera yang sesuai
     if (data.lang === 'jp') {
-      lang = 'Japan'
+      flag = <JP title="Jepang" style={{ width: '50px' }} />;
     } else {
-      lang = 'English'
+      flag = <GB title="English" style={{ width: '50px' }} />;
     }
-    return `${data?.totalPage} Page | ${lang}`;
-  }
 
+    return (
+      <>
+        {flag}
+      </>
+    );
+  }
+  
   const rowDateInsertedAt = (data) => {
     return (
       <>
@@ -188,7 +198,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             >
               <Grid
                 item="true"
-                xs={6}
+                xs={4}
               >
                 <Tooltip
                   title="Edit"
@@ -198,6 +208,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                   <IconButton
                     variant="plain"
                     color="primary"
+                    size="small"
                     onClick={() => {
                       setIsOpenModalEdit(true);
                       setIsDataEdit(data);
@@ -210,7 +221,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
 
               <Grid
                 item="true"
-                xs={6}
+                xs={4}
               >
                 <Tooltip
                   title="Delete"
@@ -220,6 +231,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                   <IconButton
                     variant="plain"
                     color="danger"
+                    size="small"
                     onClick={() => {
                       setIsOpenDelete(true)
                       setIsDataEdit(data);
@@ -229,6 +241,27 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                   </IconButton>
                 </Tooltip>
               </Grid>
+
+              <Grid
+                item="true"
+                xs={4}
+              >
+                <Tooltip
+                  title="Copy"
+                  variant="soft"
+                  color="success"
+                >
+                  <IconButton
+                    variant="plain"
+                    size="small"
+                    color="success"
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+
+
             </Grid>
           </> :
           <>
@@ -282,7 +315,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
           spacing={2}
         >
           <Grid
-            item
+            item="true"
             md={12}
             xs={12}
             display="flex"
@@ -314,7 +347,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               value={isDataTable}
               paginator
               rowsPerPageOptions={[5, 10, 25, 50 , 100]}
-              tableStyle={{ minWidth: '50rem' }}
+              tableStyle={{ minWidth: '70rem' }}
               size="small"
               scrollable
               scrollHeight="1000px"
@@ -349,7 +382,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 filter
                 filterPlaceholder="Search..."
                 style={{
-                  width: '50%',
+                  width: '40%',
                   fontWeight: 'bold',
                   fontSize: '14px'
                 }}
@@ -359,7 +392,6 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               <Column 
                 header="Total Page"
                 field="totalPage"
-                // body={rowTotalPageAndLang}
                 style={{
                   width: '10%',
                   fontSize: '14px'
@@ -369,6 +401,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               <Column 
                 header="Bahasa"
                 field="lang"
+                body={rowTotalLang}
                 style={{
                   width: '10%',
                   fontSize: '14px'
@@ -385,6 +418,9 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               <Column 
                 header="Action"
                 body={rowActionTemplate}
+                style={{
+                  width: '55%'
+                }}
               />
             </DataTable>
           </Grid>
