@@ -258,65 +258,34 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               variant="solid"
               onClick={handleSubmit}
               sx={{
-                margin: '20px 0 10px 0'
+                margin: '20px 0 20px 0'
               }}
               loading={isLoadingManhwa}
             >
               KUMPUL PROJECT
             </Button>
-            <Button 
-              color="primary"
-              onClick={() => {
-                setIsModal(true)
-              }}
-            >
-              Show Table
-            </Button>
           </form>
           
 
           {/* MODAL TABLE DATA! */}
-          <Modal
-            aria-labelledby="modal-title"
-            aria-describedby="modal-desc"
-            open={isModal}
-            onClose={(event, reason) => {
-              if (reason && reason === 'backdropClick') {
-                return;
-              }
-              setIsModal(false);
-            }}
+          <Sheet
+            variant="outlined"
             sx={{
-              zIndex: 1,
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center',
+              width: '100%',
+              maxWidth: 1100,
+              borderRadius: 'md',
+              p: 3,
+              boxShadow: 'lg',
+              // height: '80vh',
+              height: 'auto',
+              // overflowY: 'auto'
             }}
           >
-            <Sheet
-              variant="outlined"
-              sx={{
-                width: '100%',
-                maxWidth: 1100,
-                borderRadius: 'md',
-                p: 3,
-                boxShadow: 'lg',
-                // height: '80vh',
-                height: 'auto',
-                // overflowY: 'auto'
-              }}
-            >
-              <ModalClose
-                variant="plain"
-                sx={{ m: 1 }}
-              />
-
-              <DatatablesManhwa 
-                isProfile={isProfile}
-                setIsProfile={setIsProfile}
-              />
-            </Sheet>
-          </Modal>
+            <DatatablesManhwa 
+              isProfile={isProfile}
+              setIsProfile={setIsProfile}
+            />
+          </Sheet>
         </>
         : (isDivision === 'doujin') ? 
         <InputForDoujin 

@@ -297,6 +297,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
               item="true"
               md={12}
               xs={12}
+              display='flex'
+            justifyContent='flex-end'
             >
               <span className="p-input-icon-left">
                 <SearchIcon
@@ -328,7 +330,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 rowsPerPageOptions={[5 ,10, 25, 50, 100]}
                 tableStyle={{ minWidth: '50rem' }}
                 size="small"
-                scrollable scrollHeight="400px"
+                scrollable scrollHeight="1000px"
                 footer={footerDataTemplate}
               >
                 <Column 
@@ -340,7 +342,6 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <Column 
                   field="title"
                   header="Judul"
-                  footer="Judul"
                   sortable
                   filter
                   filterPlaceholder="Search..."
@@ -350,14 +351,12 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <Column 
                   field="totalCh"
                   header="Total Chapter & Bahasa"
-                  footer="Total Chapter & Bahasa"
                   body={totalChpAndLang}
                   style={{ width: '25%', fontSize: '14px' }}
                 />
                 <Column
                   field="user.displayUsername"
                   header="Staff"
-                  footer="Staff"
                   filter
                   sortable
                   filterPlaceholder="Search staff..."
@@ -366,7 +365,6 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <Column 
                   field="isNew"
                   header="New/Tidak?"
-                  footer="New/Tidak?"
                   sortable
                   body={tagIsNewTemplate}
                   style={{ fontSize: '14px' }}
@@ -374,19 +372,16 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <Column 
                   field="insertedAt"
                   header="Tanggal Input"
-                  footer="Tanggal Input"
                   sortable
                   body={dateInsertedAt}
                   style={{ width: '25%', fontSize: '14px' }}
                 />
                 <Column 
                   header="Link"
-                  footer="Link"
                   body={linkButtonTemplate}
                 />
                 <Column 
                   header="Action"
-                  footer="Action"
                   body={linkActionTemplate}
                 />
               </DataTable>

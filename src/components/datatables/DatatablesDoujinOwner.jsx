@@ -401,7 +401,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           value={isDoujinData}
           size="small"
           scrollable
-          scrollHeight="500px"
+          scrollHeight="1000px"
           removableSort
           paginator
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
@@ -411,7 +411,6 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
         >
           <Column 
             header="Nomor"
-            footer="Nomor"
             body={rowNumberTemplate}
             style={{ width: '5%' }}
             frozen
@@ -419,7 +418,6 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           <Column
             field="title"
             header="Title"
-            footer="Title"
             body={rowTitleTemplate}
             sortable
             filter
@@ -432,7 +430,6 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           />
           <Column 
             header="Total Page & Lang"
-            footer="Total Page & Lang"
             body={rowTotalPageAndLang}
             style={{
               width: '25%',
@@ -442,7 +439,6 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           <Column 
             field="user.displayUsername"
             header="Staff"
-            footer="Staff"
             sortable
             filter
             filterPlaceholder="Search here..."
@@ -453,7 +449,6 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           />
           <Column 
             header="Date Input"
-            footer="Date Input"
             sortable
             body={rowDateInsertedAt}
             style={{
@@ -463,12 +458,10 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           />
           <Column 
             header="Link"
-            footer="Link"
             body={rowLinkButtonTempate}
           />
           <Column 
             header="Action"
-            footer="Action"
             body={rowActionTemplate}
           />
         </DataTable>

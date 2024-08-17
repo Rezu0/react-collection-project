@@ -230,67 +230,31 @@ function InputForDoujin({ isProfile, setIsProfile }) {
             color="success"
             onClick={handleSubmit}
             loading={isLoadingSubmit}
+            sx={{
+              marginBottom: '10px'
+            }}
           >
             KUMPUL PROJECT
           </Button>
         </Grid>
 
-        <Grid
-          item="true"
-          md={12}
-          xs={12}
-        >
-          <Button
-            color="primary"
-            variant="solid"
-            onClick={() => {
-              setIsModalDoujin(true);
-            }}
-          >
-            Show table
-          </Button>
-        </Grid>
-
         {/* MODAL DATATABLE */}
-        <Modal
-          aria-labelledby="modal-title"
-          aria-describedby="modal-desc"
-          open={isModalDoujin}
-          onClose={(event, reason) => {
-            if (reason && reason === 'backdropClick') {
-              return;
-            }
-            setIsModalDoujin(false)
-          }}
+        <Sheet
+          variant="outlined"
           sx={{
-            zIndex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            width: '100%',
+            maxWidth: 1100,
+            borderRadius: 'md',
+            p: 3,
+            boxShadow: 'lg',
+            height: 'auto'
           }}
         >
-          <Sheet
-            variant="outlined"
-            sx={{
-              width: '100%',
-              maxWidth: 1100,
-              borderRadius: 'md',
-              p: 3,
-              boxShadow: 'lg',
-              height: 'auto'
-            }}
-          >
-            <ModalClose 
-              variant="plain"
-              sx={{ m: 1 }}
-            />
-
-            <DatatablesDoujin 
-              isProfile={isProfile}
-              setIsProfile={setIsProfile}
-            />
-          </Sheet>
-        </Modal>
+          <DatatablesDoujin 
+            isProfile={isProfile}
+            setIsProfile={setIsProfile}
+          />
+        </Sheet>
       </Grid>
     </>
   )

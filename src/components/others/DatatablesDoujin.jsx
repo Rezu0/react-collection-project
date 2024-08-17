@@ -285,6 +285,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             item="true"
             md={12}
             xs={12}
+            display='flex'
+            justifyContent='flex-end'
           >
             <span className="p-input-icon-left">
               <SearchIcon 
@@ -314,7 +316,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               tableStyle={{ minWidth: '50rem' }}
               size="small"
               scrollable
-              scrollHeight="400px"
+              scrollHeight="1000px"
               rows={10}
               removableSort
               filters={isFilter}
@@ -322,14 +324,12 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
             >
               <Column 
                 header="Nomor"
-                footer="Nomor"
                 body={rowNumberTemplate}
                 style={{ width: '5%' }}
                 frozen
               />
               <Column 
                 header="Judul"
-                footer="Judul"
                 field="title"
                 sortable
                 filter
@@ -343,7 +343,6 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               />
               <Column 
                 header="Total Page & Bahasa"
-                footer="Total Page & Bahasa"
                 body={rowTotalPageAndLang}
                 style={{
                   width: '25%',
@@ -353,7 +352,6 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               <Column 
                 field="user.displayUsername"
                 header="Staff"
-                footer="Staff"
                 sortable
                 filter
                 filterPlaceholder="Search staff..."
@@ -365,7 +363,6 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               <Column 
                 field="insertedAt"
                 header="Tanggal Input"
-                footer="Tanggal Input"
                 sortable
                 body={rowDateInsertedAt}
                 style={{
@@ -375,15 +372,12 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               />
               <Column 
                 header="Link"
-                footer="Link"
                 body={rowLinkButtonTempate}
                 style={{
                   width: '25%'
                 }}
               />
               <Column 
-                header="Action"
-                footer="Action"
                 body={rowActionTemplate}
               />
             </DataTable>
