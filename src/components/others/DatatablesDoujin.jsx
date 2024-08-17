@@ -282,23 +282,24 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
           spacing={2}
         >
           <Grid
-            item="true"
+            item
             md={12}
             xs={12}
-            display='flex'
-            justifyContent='flex-end'
+            display="flex"
+            justifyContent="flex-end"
           >
             <span className="p-input-icon-left">
               <SearchIcon 
-                style={{ marginTop: '-10px' }}
+                style={{ marginTop: '-12px', marginLeft: '7px', color: '#999' }} 
               />
               <InputText 
                 type="search"
                 value={value || ""}
                 placeholder="Search here..."
-                size='small'
                 style={{
-                  fontSize: '14px'
+                  fontSize: '14px',
+                  paddingLeft: '30px',
+                  width: '100%',
                 }}
                 onChange={(e) => onGlobalFilterChange(e)}
               />
@@ -328,27 +329,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 style={{ width: '5%' }}
                 frozen
               />
-              <Column 
-                header="Judul"
-                field="title"
-                sortable
-                filter
-                filterPlaceholder="Search..."
-                style={{
-                  width: '30%',
-                  fontWeight: 'bold',
-                  fontSize: '14px'
-                }}
-                body={rowTitleTemplate}
-              />
-              <Column 
-                header="Total Page & Bahasa"
-                body={rowTotalPageAndLang}
-                style={{
-                  width: '25%',
-                  fontSize: '14px'
-                }}
-              />
+
               <Column 
                 field="user.displayUsername"
                 header="Staff"
@@ -356,20 +337,44 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 filter
                 filterPlaceholder="Search staff..."
                 style={{
-                  width: '20%',
+                  width: '15%',
                   fontWeight: 'bold'
                 }}
               />
+
               <Column 
-                field="insertedAt"
-                header="Tanggal Input"
+                header="Judul"
+                field="title"
                 sortable
-                body={rowDateInsertedAt}
+                filter
+                filterPlaceholder="Search..."
                 style={{
-                  width: '25%',
+                  width: '50%',
+                  fontWeight: 'bold',
+                  fontSize: '14px'
+                }}
+                body={rowTitleTemplate}
+              />
+
+              <Column 
+                header="Total Page"
+                field="totalPage"
+                // body={rowTotalPageAndLang}
+                style={{
+                  width: '10%',
                   fontSize: '14px'
                 }}
               />
+
+              <Column 
+                header="Bahasa"
+                field="lang"
+                style={{
+                  width: '10%',
+                  fontSize: '14px'
+                }}
+              />
+              
               <Column 
                 header="Link"
                 body={rowLinkButtonTempate}
@@ -378,6 +383,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 }}
               />
               <Column 
+                header="Action"
                 body={rowActionTemplate}
               />
             </DataTable>

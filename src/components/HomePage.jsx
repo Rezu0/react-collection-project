@@ -176,8 +176,8 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
 
   const handleSubmitRequest = () => {
     setIsLoadingWithdraw(true);
-    if (isProfile?.amount[0].amount == 0) {
-      toast.error('Limit withdraw diatas Rp 0')
+    if (isProfile?.amount[0].amount < 100000) {
+      toast.error('Limit withdraw diatas Rp 100.000')
 
       setTimeout(() => {
         setIsLoadingWithdraw(false)
@@ -322,9 +322,16 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                                 onClick={() => {
                                   if (isInfoWihtdraw?.status == 'pending') {
                                     toast.warn('Request Withdraw sedang dilakukan!')
-                                  }else {
-                                    setIsModalWithdraw(true)
+                                    return;
                                   }
+
+                                  if (isProfile?.amount[0].amount < 100000) {
+                                    toast.warn('Saldo kurang dari Rp 100.000')
+                                    return;
+                                  }
+
+                                  setIsModalWithdraw(true)
+                                  return;
                                 }}
                               >
                                 Withdraw

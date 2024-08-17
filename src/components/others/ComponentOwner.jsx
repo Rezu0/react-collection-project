@@ -706,14 +706,18 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                   />
                   <span className="p-input-icon-left">
                     <SearchIcon 
-                      style={{ marginTop: '-11px' }}
+                      style={{ marginTop: '-12px', marginLeft: '7px', color: '#999' }}
                     />
                     <InputText 
                       type="search"
                       value={valueSaldo || ""}
                       placeholder="Search here..."
                       size='small'
-                      style={{ fontSize: '14px' }}
+                      style={{ 
+                        fontSize: '14px',
+                        paddingLeft: '30px',
+                        width: '100%',
+                      }}
                       onChange={(e) => onGlobalFilterSaldoChange(e)}
                     />
                   </span>
@@ -875,13 +879,17 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                     setIsRequestData={setIsRequestData}
                   />
                   <span className="p-input-icon-left">
-                    <SearchIcon style={{ marginTop: '-11px' }} />
+                    <SearchIcon style={{ marginTop: '-11px', marginLeft: '7px', color: '#999' }} />
                     <InputText 
                       type="search"
                       value={value || ""}
                       placeholder="Search here..."
                       size='small'
-                      style={{ fontSize: '14px' }}
+                      style={{ 
+                        fontSize: '14px',
+                        paddingLeft: '30px',
+                        width: '100%',
+                      }}
                       onChange={(e) => onGlobalFilterChange(e)}
                     />
                   </span>

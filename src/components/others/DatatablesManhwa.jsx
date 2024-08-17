@@ -302,7 +302,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
             >
               <span className="p-input-icon-left">
                 <SearchIcon
-                style={{ marginTop: '-10px' }} />
+                  style={{ marginTop: '-12px', marginLeft: '7px', color: '#999' }} />
                 <InputText 
                   type="search"
                   value={value || ""}
@@ -310,7 +310,9 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   placeholder="Search here..."
                   size='small'
                   style={{
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    paddingLeft: '30px',
+                    width: '100%',
                   }}
                 />
               </span>

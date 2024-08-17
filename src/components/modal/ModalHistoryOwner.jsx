@@ -180,13 +180,17 @@ function ModalHistoryOwner({
                 justifyContent='end'
               >
                 <span className="p-input-icon-left">
-                  <SearchIcon sx={{ marginTop: '-11px' }} />
+                  <SearchIcon sx={{ marginTop: '-12px', marginLeft: '7px', color: '#999' }} />
                   <InputText 
                     type="search"
                     value={value || ""}
                     placeholder="Search staff..."
                     size="small"
-                    style={{ fontSize: '14px' }}
+                    style={{ 
+                      fontSize: '14px',
+                      paddingLeft: '30px',
+                      width: '100%',
+                    }}
                     onChange={(e) => onUsernameFilter(e)}
                   />
                 </span>
