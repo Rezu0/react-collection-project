@@ -276,9 +276,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
               borderRadius: 'md',
               p: 3,
               boxShadow: 'lg',
-              // height: '80vh',
               height: 'auto',
-              // overflowY: 'auto'
             }}
           >
             <DatatablesManhwa 
