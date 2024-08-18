@@ -1,9 +1,6 @@
-import { FormLabel, Grid, Input, Select, Textarea, Option, IconButton, Typography, Button } from "@mui/joy";
+import { FormLabel, Grid, Input, Select, Textarea, Option, Button, Modal, Sheet, ModalClose } from "@mui/joy";
 import { FormControl } from "@mui/material";
-import { Dialog } from "primereact/dialog";
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
 import { LINK_API } from '../../utils/config.json';
@@ -14,35 +11,34 @@ function ModalEditManhwa({
   setIsOpenModal, 
   setIsProfile
 }) {
-  const [isEditData, setIsEditData] = useState();
+  const [isEditData, setIsEditData] = useState({
+    title: "",
+    link: "",
+    totalCh: "",
+    lang: "",
+    isNew: ""
+  });
   const [isLoadingButton, setIsLoadingButton] = useState(false);
 
   useEffect(() => {
-    setIsEditData((isDataModal))
-  }, [isDataModal, setIsEditData])
+    setIsEditData(isDataModal || {
+      title: "",
+      link: "",
+      totalCh: "",
+      lang: "",
+      isNew: ""
+    });
+  }, [isDataModal]);
 
   const optionsLang = [
-    {
-      value: 'eng',
-      text: 'English',
-    },
-    {
-      value: 'kor',
-      text: 'Korea',
-    },
-    {
-      value: 'spa',
-      text: 'Spain',
-    },
-    {
-      value: 'chn',
-      text: 'China',
-    },
+    { value: 'eng', text: 'English' },
+    { value: 'kor', text: 'Korea' },
+    { value: 'spa', text: 'Spain' },
+    { value: 'chn', text: 'China' },
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setIsEditData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -52,20 +48,19 @@ function ModalEditManhwa({
   const handleSelectLang = (event, newValue) => {
     setIsEditData((prevFormData) => ({
       ...prevFormData,
-      lang: newValue
+      lang: newValue || ""
     }));
   };
-
 
   const handleSelectIsNew = (event, newValue) => {
     setIsEditData((prevFormData) => ({
       ...prevFormData,
-      isNew: newValue
+      isNew: newValue || ""
     }));
-  }
+  };
 
   const handleClickEdit = () => {
-    setIsLoadingButton(true)
+    setIsLoadingButton(true);
     const storedToken = localStorage.getItem('loginState');
     const parseStorage = JSON.parse(storedToken);
 
@@ -73,75 +68,81 @@ function ModalEditManhwa({
     headersEdit.append("Content-Type", "application/json");
     headersEdit.append("Authorization", `Bearer ${parseStorage._token}`);
 
-    try {
-      const rawData = JSON.stringify({
-        uuid: isEditData?.uuid,
-        title: isEditData?.title,
-        link: isEditData?.link,
-        totalCh: isEditData?.totalCh,
-        lang: isEditData?.lang,
-        isNew: isEditData?.isNew
+    const rawData = JSON.stringify({
+      uuid: isEditData?.uuid,
+      title: isEditData?.title,
+      link: isEditData?.link,
+      totalCh: isEditData?.totalCh,
+      lang: isEditData?.lang,
+      isNew: isEditData?.isNew
+    });
+
+    const optionsEdit = {
+      method: 'PUT',
+      headers: headersEdit,
+      body: rawData,
+      redirect: 'follow'
+    };
+
+    fetch(`${LINK_API}api/manhwa`, optionsEdit)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.data) {
+          setIsProfile(result.data._user);
+          setTimeout(() => {
+            setIsOpenModal(false);
+            setIsEditData(isDataModal);
+            setIsLoadingButton(false);
+            toast.success(result.message);
+          }, 2000);
+        }
+      })
+      .catch((err) => {
+        toast.error('Terjadi kesalahan!');
+        setIsLoadingButton(false);
+        console.error(err);
       });
-      const optionsEdit = {
-        method: 'PUT',
-        headers: headersEdit,
-        body: rawData,
-        redirect: 'follow'
-      }
-
-      fetch(`${LINK_API}api/manhwa`, optionsEdit)
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.data) {
-            setIsProfile(result.data._user)
-
-            setTimeout(() => {
-              setIsOpenModal(false)
-              setIsEditData(isDataModal)
-              setIsLoadingButton(false)
-              toast.success(result.message)
-            }, 2000)
-          }
-        }).catch((err) => {
-          toast.error('Terjadi kesalahan!');
-          setIsLoadingButton(false)
-          console.error(err);
-        })
-    } catch (err) {
-      toast.error('Terjadi kesalahan saat edit information!');
-    }
-  }
+  };
 
   return (
-    <>
-      <Dialog
-        header="Edit your information"
-        visible={isOpenModal}
-        onHide={() => {
-          setIsOpenModal(false)
-          setIsEditData(isDataModal);
+    <Modal
+      open={isOpenModal}
+      onClose={(event, reason) => {
+        if (reason && reason === 'backdropClick') return;
+        setIsOpenModal(false);
+        setIsEditData(isDataModal);
+      }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2,
+      }}
+    >
+      <Sheet
+        variant="outlined"
+        sx={{
+          p: 3,
+          width: '100%',
+          maxWidth: 700,
+          borderRadius: 'md',
+          boxShadow: 'lg',
+          height: 'auto'
         }}
-        style={{ 
-          width: '100vh' 
-        }} 
-        breakpoints={{ '960px': '75vw', '641px': '100vw' }}
       >
+        <ModalClose variant="plain" sx={{ m: 1 }} />
         <form>
           <FormLabel>
             <h2>Title</h2>
           </FormLabel>
-          <FormControl 
-            sx={{
-              width: '100%'
-            }}
-          >
+          <FormControl sx={{ width: '100%' }}>
             <Input 
               type="text"
               size="md"
               name="title"
               variant="outlined"
               autoComplete="Title"
-              value={isEditData?.title}
+              value={isEditData?.title || ""}
               onChange={handleInputChange}
             />
           </FormControl>
@@ -149,125 +150,89 @@ function ModalEditManhwa({
           <FormLabel>
             <h2>Link</h2>
           </FormLabel>
-          <FormControl
-            sx={{
-              width: '100%'
-            }}
-          >
+          <FormControl sx={{ width: '100%' }}>
             <Textarea 
               name="link"
               variant="outlined"
-              value={isEditData?.link}
+              value={isEditData?.link || ""}
               autoComplete="Link"
               onChange={handleInputChange}
             />
           </FormControl>
 
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              flexGrow: 1
-            }}
-          >
-            <Grid
-              xs={4}
-              md={4}
-            >
+          <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+            <Grid xs={4} md={4}>
               <FormLabel>
                 <h3>Total Ch</h3>
               </FormLabel>
-              
               <FormControl>
                 <Input
                   type="number"
                   name="totalCh"
                   placeholder="Total Chapter..."
                   variant="soft"
-                  value={isEditData?.totalCh}
+                  value={isEditData?.totalCh || ""}
                   autoComplete="Total Chapter"
                   onChange={handleInputChange}
-                  sx={{
-                    width: '90%'
-                  }}
+                  sx={{ width: '90%' }}
                 />
               </FormControl>
             </Grid>
-            <Grid
-              xs={4}
-              md={4}
-              // margin="0 2px"
-            >
+            <Grid xs={4} md={4}>
               <FormLabel>
                 <h3>Language</h3>
               </FormLabel>
-
               <FormControl>
                 <Select
                   placeholder="Choose one..."
                   name="lang"
                   variant="soft"
-                  value={isEditData?.lang}
+                  value={isEditData?.lang || ""}
                   onChange={handleSelectLang}
-                  sx={{
-                    width: '25vh'
-                  }}
+                  sx={{ width: '25vh', zIndex: '10' }}
                 >
                   {optionsLang.map((lang) => (
-                    <Option
-                     key={lang.value}
-                     value={lang.value}
-                    >
+                    <Option key={lang.value} value={lang.value} sx={{ zIndex: '10' }}>
                       {lang.text}
                     </Option>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid
-              xs={4}
-              md={4}
-            >
+            <Grid xs={4} md={4}>
               <FormLabel>
                 <h3>Is New?</h3>
               </FormLabel>
-
               <FormControl>
                 <Select
                   placeholder="Choose one..."
                   name="isNew"
                   variant="soft"
-                  value={isEditData?.isNew}
+                  value={isEditData?.isNew || ""}
                   onChange={handleSelectIsNew}
-                  sx={{
-                    width: '25vh'
-                  }}
+                  sx={{ width: '25vh' }}
                 >
                   <Option value={1}>Yes</Option>
                   <Option value="0">No</Option>
                 </Select>
               </FormControl>
             </Grid>
-
-            <Grid
-                xs={12}
-                md={12}
+            <Grid xs={12} md={12}>
+              <Button
+                variant="solid"
+                startDecorator={<EditIcon />}
+                color="success"
+                onClick={handleClickEdit}
+                loading={isLoadingButton}
               >
-                <Button 
-                  variant="solid" 
-                  startDecorator={<EditIcon />}
-                  color="success"
-                  onClick={handleClickEdit}
-                  loading={isLoadingButton}
-                >
-                  Update information
-                </Button>
-              </Grid>
+                Update information
+              </Button>
+            </Grid>
           </Grid>
         </form>
-      </Dialog>
-    </>
-  )
+      </Sheet>
+    </Modal>
+  );
 }
 
 export default ModalEditManhwa;

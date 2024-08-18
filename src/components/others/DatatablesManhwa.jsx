@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 
 // STYLING
@@ -22,6 +23,7 @@ import { toast } from "react-toastify";
 import { Tag } from "primereact/tag";
 import ModalEditManhwa from "../modal/ModalEditManhwa";
 import DialogDeleteManhwa from "../modal/DialogDeleteManhwa";
+import { CN, ES, GB, KR } from "country-flag-icons/react/3x2";
 
 function DatatablesManhwa({ isProfile, setIsProfile }) {
   const [isData, setIsData] = useState(null)
@@ -128,9 +130,30 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
   }
 
   const totalChpAndLang = (data) => {
-    return `
-      ${data.totalCh} Ch | ${functionLang(data.lang)}
-    `
+    let flag;
+  
+    // Tentukan bahasa dan ikon bendera yang sesuai
+    if (data.lang === 'kor') {
+      flag = <KR title="Korea" style={{ width: '50px' }} />;
+    }
+
+    if (data.lang === 'eng') {
+      flag = <GB title="English" style={{ width: '50px' }} />;
+    }
+
+    if (data.lang === 'chn') {
+      flag = <CN title="China" style={{ width: '50px' }} />;
+    }
+
+    if (data.lang === 'spa') {
+      flag = <ES title="Spain" style={{ width: '50px' }} />;
+    }
+
+    return (
+      <>
+        {flag}
+      </>
+    );
   }
 
   const rowNumberTemplate = (rowData, column) => {
@@ -150,7 +173,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
         target="_blank"
         component="a"
         sx={{
-          fontSize: '12px'
+          fontSize: '12px',
         }}
       >
         Open Link
@@ -170,7 +193,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
           >
             <Grid
               item="true"
-              xs={6}
+              xs={4}
             >
               <Tooltip title="Edit" variant="soft" color="warning">
                 <IconButton
@@ -185,9 +208,10 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 </IconButton>
               </Tooltip>
             </Grid>
+
             <Grid
               item="true"
-              xs={6}
+              xs={4}
             >
               <Tooltip title="Delete" variant="soft" color="danger">
                 <IconButton
@@ -202,6 +226,25 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 </IconButton>
               </Tooltip>
             </Grid>
+
+            <Grid
+                item="true"
+                xs={4}
+              >
+                <Tooltip
+                  title="Copy"
+                  variant="soft"
+                  color="success"
+                >
+                  <IconButton
+                    variant="plain"
+                    size="small"
+                    color="success"
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
           </Grid>
 
         </>
@@ -298,7 +341,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
               md={12}
               xs={12}
               display='flex'
-            justifyContent='flex-end'
+              justifyContent='flex-end'
             >
               <span className="p-input-icon-left">
                 <SearchIcon
@@ -330,61 +373,89 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 filters={isFilter}
                 onFilter={(e) => setIsFilter(e.filters)}
                 rowsPerPageOptions={[5 ,10, 25, 50, 100]}
-                tableStyle={{ minWidth: '50rem' }}
+                tableStyle={{ minWidth: '80rem' }}
                 size="small"
-                scrollable scrollHeight="1000px"
+                scrollable
+                scrollHeight="1000px"
                 footer={footerDataTemplate}
               >
                 <Column 
                   header='Nomor'
                   body={rowNumberTemplate}
-                  style={{ width: '5%' }}
+                  style={{ width: '5%', zIndex: "1" }}
                   frozen
                 />
-                <Column 
-                  field="title"
-                  header="Judul"
-                  sortable
-                  filter
-                  filterPlaceholder="Search..."
-                  style={{ width: '25%', fontWeight: 'bold', fontSize: '14px' }}
-                  body={rowTitleTemplate}
-                />
-                <Column 
-                  field="totalCh"
-                  header="Total Chapter & Bahasa"
-                  body={totalChpAndLang}
-                  style={{ width: '25%', fontSize: '14px' }}
-                />
+
                 <Column
                   field="user.displayUsername"
                   header="Staff"
                   filter
                   sortable
                   filterPlaceholder="Search staff..."
-                  style={{ width: '25%', fontWeight: 'bold',  fontSize: '14px' }}
+                  style={{
+                    width: '8%',
+                    fontWeight: 'bold',
+                    fontSize: '14px'
+                  }}
                 />
+
+                <Column 
+                  field="title"
+                  header="Judul"
+                  sortable
+                  filter
+                  filterPlaceholder="Search..."
+                  style={{
+                    width: '35%',
+                    fontWeight: 'bold',
+                    fontSize: '14px'
+                  }}
+                  body={rowTitleTemplate}
+                />
+
+                <Column 
+                  field="totalCh"
+                  header="Total Chapter"
+                  style={{
+                    width: '8%',
+                    fontSize: '14px'
+                  }}
+                />
+
+                <Column 
+                  header="Bahasa"
+                  body={totalChpAndLang}
+                  style={{
+                    width: '13%',
+                    fontSize: '14px'
+                  }}
+                />
+
                 <Column 
                   field="isNew"
                   header="New/Tidak?"
                   sortable
                   body={tagIsNewTemplate}
-                  style={{ fontSize: '14px' }}
+                  style={{
+                    width: '10%',
+                    fontSize: '14px'
+                  }}
                 />
-                <Column 
-                  field="insertedAt"
-                  header="Tanggal Input"
-                  sortable
-                  body={dateInsertedAt}
-                  style={{ width: '25%', fontSize: '14px' }}
-                />
+
                 <Column 
                   header="Link"
                   body={linkButtonTemplate}
+                  style={{
+                    width: '12%'
+                  }}
                 />
+
                 <Column 
                   header="Action"
                   body={linkActionTemplate}
+                  style={{
+                    width: '35%'
+                  }}
                 />
               </DataTable>
             </Grid>
