@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { GB, JP } from "country-flag-icons/react/3x2";
 
 function ButtonRefreshData({ 
   setIsDoujinData,
@@ -252,15 +253,22 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
     )
   }
 
-  const rowTotalPageAndLang = (data) => {
-    let lang;
+  const rowBahasaWithFlag = (data) => {
+    let flag;
+
     if (data.lang === 'jp') {
-      lang = 'Japan'
-    } else {
-      lang = 'English'
+      flag = <JP title="Jepang" style={{ width: '50px' }} />
     }
 
-    return `${data?.totalPage} Page | ${lang}`
+    if (data.lang === 'eng') {
+      flag = <GB title="English" style={{ width: '50px' }} />
+    }
+
+    return (
+      <>
+        {flag}
+      </>
+    );
   }
 
   const rowDateInsertedAt = (data) => {
@@ -406,6 +414,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           size="small"
           scrollable
           scrollHeight="1000px"
+          tableStyle={{ minWidth: '50rem' }}
           removableSort
           paginator
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
@@ -416,9 +425,22 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           <Column 
             header="Nomor"
             body={rowNumberTemplate}
-            style={{ width: '5%' }}
+            style={{ width: '5%', zIndex: 1 }}
             frozen
           />
+
+          <Column 
+            field="user.displayUsername"
+            header="Staff"
+            sortable
+            filter
+            filterPlaceholder="Search here..."
+            style={{
+              width: '8%',
+              fontWeight: 'bold'
+            }}
+          />
+
           <Column
             field="title"
             header="Title"
@@ -427,47 +449,48 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
             filter
             filterPlaceholder="Search here..."
             style={{
-              width: '30%',
+              width: '40%',
               fontWeight: 'bold',
               fontSize: '14px'
             }}
           />
+
           <Column 
-            header="Total Page & Lang"
-            body={rowTotalPageAndLang}
+            header="Total Page"
+            field="totalPage"
             style={{
-              width: '25%',
+              width: '10%',
+              fontSize: '14px',
+              textAlign: 'center'
+            }}
+          />
+
+          <Column 
+            header="Bahasa"
+            field="lang"
+            body={rowBahasaWithFlag}
+            style={{
+              width: '13%',
               fontSize: '14px'
             }}
           />
-          <Column 
-            field="user.displayUsername"
-            header="Staff"
-            sortable
-            filter
-            filterPlaceholder="Search here..."
-            style={{
-              width: '20%',
-              fontWeight: 'bold'
-            }}
-          />
-          <Column 
-            header="Date Input"
-            sortable
-            body={rowDateInsertedAt}
-            style={{
-              width: '25%',
-              fontSize: '14px'
-            }}
-          />
+
           <Column 
             header="Link"
             body={rowLinkButtonTempate}
+            style={{
+              width: '15%'
+            }}
           />
+
           <Column 
             header="Action"
             body={rowActionTemplate}
+            style={{
+              width: '15%'
+            }}
           />
+
         </DataTable>
       </Sheet>
     </>

@@ -14,6 +14,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { CN, ES, GB, KR } from "country-flag-icons/react/3x2";
 
 const functionLang = (lang) => {
   switch (lang) {
@@ -194,7 +195,29 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
   }
 
   const rowTotalPageAndLang = (data) => {
-    return `${data?.totalCh} Ch | ${functionLang(data?.lang)}`;
+    let flag;
+
+    if (data.lang === 'kor') {
+      flag = <KR title="Korea" style={{ width: '50px' }} />
+    }
+
+    if (data.lang === 'eng') {
+      flag = <GB title="English" style={{ width: '50px' }} />
+    }
+
+    if (data.lang === 'chn') {
+      flag = <CN title="China" style={{ width: '50px' }} />
+    }
+
+    if (data.lang === 'spa') {
+      flag = <ES title="Spain" style={{ width: '50px' }} />
+    }
+
+    return (
+      <>
+        {flag}
+      </>
+    )
   }
 
   const tagIsNewTemplate = (data) => {
@@ -426,8 +449,19 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             header="Nomor"
             body={rowNumberTemplate}
-            style={{ width: '5%' }}
+            style={{ width: '5%', zIndex: '1' }}
             frozen
+          />
+
+          <Column 
+            field="user.displayUsername"
+            header="Staff"
+            filter
+            filterPlaceholder="Search here..."
+            style={{
+              width: '10%',
+              fontWeight: 'bold'
+            }}
           />
 
           <Column 
@@ -438,30 +472,29 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             filter
             filterPlaceholder="Search here..."
             style={{
-              width: '30%',
+              width: '35%',
               fontWeight: 'bold',
-              fontSize: '14px'
+              fontSize: '14px',
             }}
           />
 
           <Column 
-            header="Total Page & Lang"
+            field="totalCh"
+            header="Total Chapter"
+            style={{
+              width: '8%',
+              fontSize: '14px',
+              textAlign: 'center'
+            }}
+          />
+
+          <Column 
+            header="Bahasa"
             body={rowTotalPageAndLang}
             style={{
-              width: '25%',
-              fontSize: '14px'
-            }}
-          />
-
-          <Column 
-            field="user.displayUsername"
-            header="Staff"
-            sortable
-            filter
-            filterPlaceholder="Search here..."
-            style={{
-              width: '20%',
-              fontWeight: 'bold'
+              width: '13%',
+              fontSize: '14px',
+              textAlign: 'center'
             }}
           />
 
@@ -469,16 +502,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             field="isNew"
             header="Is New?"
             body={tagIsNewTemplate}
-            sortable
             style={{ fontSize: '14px' }}
-          />
-
-          <Column 
-            field="insertedAt"
-            header="Date Input"
-            body={rowDateInsertedAt}
-            sortable
-            style={{ width: '25%', fontSize: '14px' }}
           />
 
           <Column 
