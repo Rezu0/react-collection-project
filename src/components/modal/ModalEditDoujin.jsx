@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Grid, Input, Option, Select, Textarea } from "@mui/joy";
+import { Button, FormControl, FormLabel, Grid, Input, Modal, ModalClose, Option, Select, Sheet, Textarea } from "@mui/joy";
 import { Dialog } from "primereact/dialog";
 import React from "react";
 import { useEffect } from "react";
@@ -98,131 +98,147 @@ function ModalEditDoujin({
 
   return (
     <>
-      <Dialog
-        header="Edit your information"
-        visible={isOpenModalEdit}
-        style={{
-          width: '50vw'
-        }}
-        onHide={() => {
+      <Modal
+        open={isOpenModalEdit}
+        onClose={(event, reason) => {
+          if (reason && reason === 'backdropClick') return;
           setIsOpenModalEdit(false)
           setIsFormData(isDataEdit);
         }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 2,
+        }}
       >
-        <form>
-        <FormLabel>
-          <h2>Title</h2>
-        </FormLabel>
-        <FormControl
+        <Sheet
+          variant="outlined"
           sx={{
-            width: '100%'
+            p: 3,
+            width: '100%',
+            maxWidth: 700,
+            borderRadius: 'md',
+            boxShadow: 'lg',
+            height: 'auto'
           }}
         >
-          <Input 
-            type="text"
-            size="md"
-            name="title"
-            variant="outlined"
-            autoComplete="Title"
-            value={isFormData?.title}
-            onChange={handleInputChange}
-          />
-        </FormControl>
-
-        <FormLabel>
-          <h2>Link</h2>
-        </FormLabel>
-        <FormControl
-          sx={{
-            width: '100%'
-          }}
-        >
-          <Textarea
-            name="link"
-            variant="outlined"
-            value={isFormData?.link}
-            autoComplete="Link"
-            onChange={handleInputChange}
-          />
-        </FormControl>
-
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            flexGrow: 1
-          }}
-        >
-          <Grid
-            xs={6}
-            md={6}
-          >
+          <ModalClose variant="plain" sx={{ m: 1 }} />
+          <form>
             <FormLabel>
-              <h3>Total Ch</h3>
+              <h2>Title</h2>
             </FormLabel>
-            <FormControl>
+            <FormControl
+              sx={{
+                width: '100%'
+              }}
+            >
               <Input 
-                type="number"
-                name="totalPage"
-                placeholder="Total Page..."
-                variant="soft"
-                value={isFormData?.totalPage}
-                autoComplete="Total Page"
+                type="text"
+                size="md"
+                name="title"
+                variant="outlined"
+                autoComplete="Title"
+                value={isFormData?.title}
                 onChange={handleInputChange}
-                sx={{
-                  width: '100%'
-                }}
               />
             </FormControl>
-          </Grid>
 
-          <Grid
-            xs={6}
-            md={6}
-          >
             <FormLabel>
-              <h3>Language</h3>
+              <h2>Link</h2>
             </FormLabel>
-            <FormControl>
-              <Select
-                placeholder="Choose one..."
-                name="lang"
-                variant="soft"
-                value={isFormData?.lang}
-                onChange={handleSelectLang}
-                sx={{
-                  width: '100%'
-                }}
-              >
-                {optionsLang.map((lang) => (
-                  <Option
-                    key={lang.value}
-                    value={lang.value}
-                  >
-                    {lang.text}
-                  </Option>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid
-            xs={12}
-            md={12}
-          >
-            <Button
-              variant="solid"
-              startDecorator={<EditIcon />}
-              color="success"
-              loading={isLoadingEditBtn}
-              onClick={onClickButtonEdit}
+            <FormControl
+              sx={{
+                width: '100%'
+              }}
             >
-              Update information
-            </Button>
-          </Grid>
-        </Grid>
-        </form>
-      </Dialog>
+              <Textarea
+                name="link"
+                variant="outlined"
+                value={isFormData?.link}
+                autoComplete="Link"
+                onChange={handleInputChange}
+              />
+            </FormControl>
+
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                flexGrow: 1
+              }}
+            >
+              <Grid
+                xs={6}
+                md={6}
+              >
+                <FormLabel>
+                  <h3>Total Page</h3>
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number"
+                    name="totalPage"
+                    placeholder="Total Page..."
+                    variant="soft"
+                    value={isFormData?.totalPage}
+                    autoComplete="Total Page"
+                    onChange={handleInputChange}
+                    sx={{
+                      width: '100%'
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid
+                xs={6}
+                md={6}
+              >
+                <FormLabel>
+                  <h3>Language</h3>
+                </FormLabel>
+                <FormControl>
+                  <Select
+                    placeholder="Choose one..."
+                    name="lang"
+                    variant="soft"
+                    value={isFormData?.lang}
+                    onChange={handleSelectLang}
+                    sx={{
+                      width: '100%',
+                    }}
+                  >
+                    {optionsLang.map((lang) => (
+                      <Option
+                        key={lang.value}
+                        value={lang.value}
+                      >
+                        {lang.text}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                xs={12}
+                md={12}
+              >
+                <Button
+                  variant="solid"
+                  startDecorator={<EditIcon />}
+                  color="success"
+                  loading={isLoadingEditBtn}
+                  onClick={onClickButtonEdit}
+                >
+                  Update information
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Sheet>
+      </Modal>
     </>
   )
 }
