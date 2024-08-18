@@ -189,7 +189,7 @@ function ModalEditManhwa({
                   variant="soft"
                   value={isEditData?.lang || ""}
                   onChange={handleSelectLang}
-                  sx={{ width: '25vh', zIndex: '10' }}
+                  sx={{ width: '200%' }}
                 >
                   {optionsLang.map((lang) => (
                     <Option key={lang.value} value={lang.value} sx={{ zIndex: '10' }}>
@@ -210,7 +210,7 @@ function ModalEditManhwa({
                   variant="soft"
                   value={isEditData?.isNew || ""}
                   onChange={handleSelectIsNew}
-                  sx={{ width: '25vh' }}
+                  sx={{ width: '250%' }}
                 >
                   <Option value={1}>Yes</Option>
                   <Option value="0">No</Option>

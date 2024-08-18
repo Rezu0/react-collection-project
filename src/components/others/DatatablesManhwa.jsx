@@ -418,7 +418,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Total Chapter"
                   style={{
                     width: '8%',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    textAlign: 'center'
                   }}
                 />
 
@@ -426,7 +427,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Bahasa"
                   body={totalChpAndLang}
                   style={{
-                    width: '13%',
+                    width: '10%',
                     fontSize: '14px'
                   }}
                 />
@@ -438,7 +439,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   body={tagIsNewTemplate}
                   style={{
                     width: '10%',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    textAlign: 'center'
                   }}
                 />
 
@@ -454,7 +456,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Action"
                   body={linkActionTemplate}
                   style={{
-                    width: '35%'
+                    width: '10%'
                   }}
                 />
               </DataTable>
