@@ -9,7 +9,7 @@ import { Box, Button, Grid, IconButton, Tooltip, Typography } from "@mui/joy";
 import SearchIcon from '@mui/icons-material/Search';
 import { InputText } from "primereact/inputtext";
 import { Badge } from "primereact/badge";
-import { formatDateForHuman, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
+import { formatDateForHuman, languageProject, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Tag } from "primereact/tag";
@@ -255,6 +255,14 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                     variant="plain"
                     size="small"
                     color="success"
+                    onClick={async () => {
+                      const template = `#${data?.title} #${languageProject(data?.lang)} #${data?.totalPage} Page #${data?.user?.displayUsername}`;
+
+                      await navigator.clipboard.writeText(template)
+                        .then(() => toast.success('Copied!', { autoClose: 1000 }))
+                        .catch((err) => toast.error('Gagal copy!'));
+                      return;
+                    }}
                   >
                     <ContentCopyIcon />
                   </IconButton>
@@ -347,7 +355,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
               value={isDataTable}
               paginator
               rowsPerPageOptions={[5, 10, 25, 50 , 100]}
-              tableStyle={{ minWidth: '70rem' }}
+              tableStyle={{ minWidth: '50rem' }}
               size="small"
               scrollable
               scrollHeight="1000px"
@@ -370,7 +378,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 filter
                 filterPlaceholder="Search staff..."
                 style={{
-                  width: '8%',
+                  width: '10%',
                   fontWeight: 'bold'
                 }}
               />
@@ -382,7 +390,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 filter
                 filterPlaceholder="Search..."
                 style={{
-                  width: '35%',
+                  width: '40%',
                   fontWeight: 'bold',
                   fontSize: '14px'
                 }}
@@ -394,7 +402,8 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 field="totalPage"
                 style={{
                   width: '10%',
-                  fontSize: '14px'
+                  fontSize: '14px',
+                  textAlign: 'center'
                 }}
               />
 
@@ -403,7 +412,7 @@ function DatatablesDoujin({ isProfile, setIsProfile }) {
                 field="lang"
                 body={rowTotalLang}
                 style={{
-                  width: '15%',
+                  width: '10%',
                   fontSize: '14px'
                 }}
               />

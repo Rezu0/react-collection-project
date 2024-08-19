@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { LINK_API } from '../../utils/config.json';
-import { showFormatDatatable, isNew, showFormatDateReadable, showFormattedDate, formatDateForHuman } from '../../utils/dataMenu';
+import { showFormatDatatable, isNew, showFormatDateReadable, showFormattedDate, formatDateForHuman, languageProject } from '../../utils/dataMenu';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -240,6 +240,19 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                     variant="plain"
                     size="small"
                     color="success"
+                    onClick={async () => {
+                      let template;
+                      if (data?.isNew === 1) {
+                        template = `#New #${data?.title} #${languageProject(data?.lang)} #${data?.totalCh} Chapter #${data?.user?.displayUsername}`;
+                      } else {
+                        template = `#${data?.title} #${languageProject(data?.lang)} #${data?.totalCh} Chapter #${data?.user?.displayUsername}`;
+                      }
+
+                      await navigator.clipboard.writeText(template)
+                        .then(() => toast.success('Copied!', { autoClose: 1000 }))
+                        .catch((err) => toast.error('Gagal copy!'));
+                      return;
+                    }}
                   >
                     <ContentCopyIcon />
                   </IconButton>
@@ -373,7 +386,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 filters={isFilter}
                 onFilter={(e) => setIsFilter(e.filters)}
                 rowsPerPageOptions={[5 ,10, 25, 50, 100]}
-                tableStyle={{ minWidth: '80rem' }}
+                tableStyle={{ minWidth: '50rem' }}
                 size="small"
                 scrollable
                 scrollHeight="1000px"
@@ -406,7 +419,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   filter
                   filterPlaceholder="Search..."
                   style={{
-                    width: '35%',
+                    width: '30%',
                     fontWeight: 'bold',
                     fontSize: '14px'
                   }}
@@ -417,7 +430,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   field="totalCh"
                   header="Total Chapter"
                   style={{
-                    width: '8%',
+                    width: '10%',
                     fontSize: '14px',
                     textAlign: 'center'
                   }}
