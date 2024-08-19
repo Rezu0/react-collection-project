@@ -7,6 +7,8 @@ import { Button, Grid, IconButton, Sheet, Tooltip, Typography } from "@mui/joy";
 import { formatDateForHuman, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { InputText } from "primereact/inputtext";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
@@ -232,22 +234,9 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           arrow
           placement="top"
         >
-          {(data?.approved === 0) ? 
-              <Typography>
-                {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
-              </Typography>
-            : 
-              <Typography>
-                {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
-                <IconButton
-                  variant="plain"
-                  color="success"
-                >
-                  <CheckCircleIcon />
-                </IconButton>
-              </Typography>
-          }
-          
+          <Typography>
+              {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
+            </Typography>          
         </Tooltip>
       </>
     )
@@ -322,19 +311,31 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
               <Button 
                 variant="plain"
                 color="success"
-                startDecorator={<CheckCircleIcon />}
+                startDecorator={<CloseIcon />}
                 sx={{
-                  "--Button-gap": "0px",
-                  padding: '0px 5px'
+                  "--button-gap": "0px",
+                  paddingLeft: '25px',
+                  width: '20px'
                 }}
                 onClick={() => onClickHandlerApproved(data)}
                 loading={(isLoading.id === data?.uuid) ? isLoading.loading : false}
               />
             </Tooltip>
           </>
-        : <>
-
-        </>}
+        : 
+          <>
+            <Button 
+              variant="plain"
+              color="success"
+              startDecorator={<CheckCircleIcon />}
+              sx={{
+                "--button-gap": "0px",
+                  paddingLeft: '25px',
+                  width: '20px'
+              }}
+            />
+          </>
+        }
       </>
     )
   }
@@ -449,7 +450,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
             filter
             filterPlaceholder="Search here..."
             style={{
-              width: '40%',
+              width: '45%',
               fontWeight: 'bold',
               fontSize: '14px'
             }}
@@ -470,7 +471,7 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
             field="lang"
             body={rowBahasaWithFlag}
             style={{
-              width: '13%',
+              width: '10%',
               fontSize: '14px'
             }}
           />
@@ -487,7 +488,8 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
             header="Action"
             body={rowActionTemplate}
             style={{
-              width: '15%'
+              width: '15%',
+              textAlign: 'center'
             }}
           />
 

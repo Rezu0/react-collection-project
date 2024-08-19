@@ -12,6 +12,7 @@ import { formatDateForHuman, isNew, showFormatDatatable, showFormatDateReadable 
 import { Tag } from "primereact/tag";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { CN, ES, GB, KR } from "country-flag-icons/react/3x2";
@@ -180,14 +181,6 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
         >
           <Typography>
             {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
-            {(data?.approved === 1) ? 
-              <IconButton
-                variant="plain"
-                color="success"
-              >
-                <CheckCircleIcon />
-              </IconButton>
-            : '' }
           </Typography>
         </Tooltip>
       </>
@@ -353,17 +346,31 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
               <Button 
                 variant="plain"
                 color="success"
-                startDecorator={<CheckCircleIcon />}
+                startDecorator={<CloseIcon />}
                 sx={{
                   "--button-gap": "0px",
-                  padding: '0px 5px'
+                  paddingLeft: '25px',
+                  width: '20px'
                 }}
                 onClick={() => onClickHandlerApproved(data)}
                 loading={(isLoading.id === data?.uuid) ? isLoading.loading : false}
               />
             </Tooltip>
           </>
-        : ''}
+        :
+          <>
+            <Button 
+              variant="plain"
+              color="success"
+              startDecorator={<CheckCircleIcon />}
+              sx={{
+                "--button-gap": "0px",
+                  paddingLeft: '25px',
+                  width: '20px'
+              }}
+            />
+          </>
+        }
       </>
     )
   }
@@ -482,7 +489,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             field="totalCh"
             header="Total Chapter"
             style={{
-              width: '8%',
+              width: '10%',
               fontSize: '14px',
               textAlign: 'center'
             }}
@@ -491,10 +498,11 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             header="Bahasa"
             body={rowTotalPageAndLang}
+            headerStyle={{ textAlign: 'center' }}
+            // bodyStyle={{ textAlign: 'center' }}
             style={{
-              width: '13%',
+              width: '10%',
               fontSize: '14px',
-              textAlign: 'center'
             }}
           />
 
