@@ -456,7 +456,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             header="Nomor"
             body={rowNumberTemplate}
-            style={{ width: '5%', zIndex: '1' }}
+            style={{ width: '5%' }}
             frozen
           />
 

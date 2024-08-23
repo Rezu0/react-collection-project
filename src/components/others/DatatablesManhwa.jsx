@@ -298,12 +298,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
           <Typography>
             {(data?.title.length < 50) ? data?.title : `${limitStr}...`}
             {(data?.approved === 1) ? 
-              <IconButton
-                variant="plain"
-                color="success"
-              >
-                <CheckCircleIcon />
-              </IconButton>
+              <CheckCircleIcon color="success"/>
             : ''}
           </Typography>
         </Tooltip>
@@ -395,7 +390,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 <Column 
                   header='Nomor'
                   body={rowNumberTemplate}
-                  style={{ width: '5%', zIndex: "1" }}
+                  style={{ width: '5%' }}
                   frozen
                 />
 
