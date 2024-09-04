@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import SearchIcon from '@mui/icons-material/Search';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { LINK_API } from '../../utils/config.json';
-import { showFormatDatatable, isNew, showFormatDateReadable, showFormattedDate, formatDateForHuman, languageProject } from '../../utils/dataMenu';
+import { showFormatDatatable, isNew, showFormatDateReadable, showFormattedDate, formatDateForHuman, languageProject, oktWm } from '../../utils/dataMenu';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -16,7 +16,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // STYLING
 import "primereact/resources/themes/lara-light-indigo/theme.css";
-import { Box, Button, Grid, IconButton, Tooltip, Typography } from "@mui/joy";
+import { Box, Button, Grid, IconButton, Link, Tooltip, Typography } from "@mui/joy";
 import { InputText } from "primereact/inputtext";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
@@ -241,12 +241,22 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                     size="small"
                     color="success"
                     onClick={async () => {
-                      let template;
+                      let tags = [];
+
                       if (data?.isNew === 1) {
-                        template = `#New #${data?.title} #${languageProject(data?.lang)} #${data?.totalCh} Chapter #${data?.user?.displayUsername}`;
-                      } else {
-                        template = `#${data?.title} #${languageProject(data?.lang)} #${data?.totalCh} Chapter #${data?.user?.displayUsername}`;
+                        tags.push("#New");
                       }
+
+                      if (data?.oktWm === 1) {
+                        tags.push("#OKT");
+                      }
+
+                      tags.push(`#${data?.title}`);
+                      tags.push(`#${languageProject(data?.lang)}`);
+                      tags.push(`#${data?.totalCh} Chapter`);
+                      tags.push(`#${data?.user?.displayUsername}`);
+
+                      const template = tags.join(" ");
 
                       await navigator.clipboard.writeText(template)
                         .then(() => toast.success('Copied!', { autoClose: 1000 }))
@@ -279,6 +289,19 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
         className="mr-2"
         value={isNew(data.isNew)}
         severity={isNewFunc}
+      />
+    )
+  }
+
+  const oktWmTemplate = (data) => {
+    const oktWmFunc = (oktWm(data.oktWm) === 'WM OKT') ? '#0f0f0f' : '#ff0000';
+    return (
+      <Tag 
+        className="mr-2"
+        value={oktWm(data.oktWm)}
+        style={{
+          backgroundColor: oktWmFunc
+        }}
       />
     )
   }
@@ -381,7 +404,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 filters={isFilter}
                 onFilter={(e) => setIsFilter(e.filters)}
                 rowsPerPageOptions={[5 ,10, 25, 50, 100]}
-                tableStyle={{ minWidth: '50rem' }}
+                tableStyle={{ minWidth: '70rem' }}
                 size="small"
                 scrollable
                 scrollHeight="1000px"
@@ -435,7 +458,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Bahasa"
                   body={totalChpAndLang}
                   style={{
-                    width: '10%',
+                    width: '5%',
                     fontSize: '14px'
                   }}
                 />
@@ -446,9 +469,19 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   sortable
                   body={tagIsNewTemplate}
                   style={{
-                    width: '10%',
+                    width: '5%',
                     fontSize: '14px',
                     textAlign: 'center'
+                  }}
+                />
+
+                <Column 
+                  field="oktWm"
+                  header="NO WM/WM OKT"
+                  body={oktWmTemplate}
+                  style={{
+                    width: '10%',
+                    fontSize: '14px'
                   }}
                 />
 

@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { LINK_API } from '../../utils/config.json';
 import { toast } from "react-toastify";
-import { formatDateForHuman, isNew, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
+import { formatDateForHuman, isNew, oktWm, showFormatDatatable, showFormatDateReadable } from "../../utils/dataMenu";
 import { Tag } from "primereact/tag";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -224,6 +224,19 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           severity={isNewFunc}
         />
       </>
+    )
+  }
+
+  const oktWmTemplate = (data) => {
+    const oktWmFunc = (oktWm(data.oktWm) === 'WM OKT') ? '#0f0f0f' : '#ff0000';
+    return (
+      <Tag 
+        className="mr-2"
+        value={oktWm(data.oktWm)}
+        style={{
+          backgroundColor: oktWmFunc
+        }}
+      />
     )
   }
 
@@ -449,6 +462,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           removableSort
           paginator
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
+          tableStyle={{ minWidth: '60rem' }}
           rows={10}
           filters={isFilter}
           onFilter={(e) => setIsFilter(e.filters)}
@@ -501,7 +515,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             headerStyle={{ textAlign: 'center' }}
             // bodyStyle={{ textAlign: 'center' }}
             style={{
-              width: '10%',
+              width: '8%',
               fontSize: '14px',
             }}
           />
@@ -510,7 +524,17 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             field="isNew"
             header="Is New?"
             body={tagIsNewTemplate}
-            style={{ fontSize: '14px' }}
+            style={{ fontSize: '14px', width: '8%' }}
+          />
+
+          <Column 
+            field="oktWm"
+            header="NO WM/WM OKT"
+            body={oktWmTemplate}
+            style={{
+              width: '10%',
+              fontSize: '14px'
+            }}
           />
 
           <Column 
