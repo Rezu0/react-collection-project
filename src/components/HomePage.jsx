@@ -416,14 +416,13 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                                   flexGrow: 1
                                 }}
                               >
-                                <Grid xs={3}>
+                                <Grid item="true" xs={12} sm={6} md={3}>
                                   <Tag 
                                     value={formatToCurrency(isInfoWihtdraw?.amount)}
                                     style={{
                                       backgroundColor: 'limegreen',
                                       padding: '3px 10px',
                                       borderRadius: '10px',
-                                      margin: '0px 3px',
                                       fontFamily: 'Titillium Web',
                                       fontSize: '13px',
                                       maxHeight: '25px',
@@ -431,48 +430,43 @@ function HomePage({ isRoles, isDivision, setIsDivision }) {
                                     }}
                                   />
                                 </Grid>
-                                <Grid xs={2}>
+                                <Grid item="true" xs={12} sm={6} md={2}>
                                   <Tag 
                                     value={isInfoWihtdraw?.via}
                                     style={{
                                       backgroundColor: '#4c2a86',
                                       padding: '3px 10px',
                                       borderRadius: '10px',
-                                      margin: '0px 3px',
                                       fontFamily: 'Titillium Web',
                                       fontSize: '13px',
                                       maxHeight: '25px',
                                       maxWidth: '100px',
-                                      marginLeft: '10px'
                                     }}
                                   />
                                 </Grid>
 
-                                <Grid xs={6}>
+                                <Grid item="true" xs={12} sm={6} md={3}>
                                   <Tag 
                                     value={isInfoWihtdraw?.nomor}
                                     style={{
                                       backgroundColor: '#000000',
                                       padding: '3px 10px',
                                       borderRadius: '10px',
-                                      margin: '0px 3px',
                                       fontFamily: 'Titillium Web',
                                       fontSize: '13px',
                                       maxHeight: '25px',
                                       maxWidth: '100px',
-                                      marginLeft: '10px'
                                     }}
                                   />
                                 </Grid>
 
-                                <Grid xs={6}>
+                                <Grid item="true" xs={12} sm={6} md={4}>
                                   <Tag 
                                     value={showFormattedDate(isInfoWihtdraw?.dateWithdraw)}
                                     style={{
                                       backgroundColor: '#ebebeb',
                                       padding: '3px 10px',
                                       borderRadius: '10px',
-                                      margin: '0px 3px',
                                       fontFamily: 'Titillium Web',
                                       fontSize: '13px',
                                       color: '#000000'

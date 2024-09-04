@@ -163,7 +163,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
         </Grid>
 
         <Grid
-          item='true'
+          item="true"
           md={6}
           xs={6}
         >
@@ -188,7 +188,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
         </Grid>
 
         <Grid
-          item='true'
+          item="true"
           md={6}
           xs={6}
         >
@@ -220,7 +220,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
         </Grid>
 
         <Grid
-          item='true'
+          item="true"
           md={12}
           xs={12}
         >
