@@ -15,6 +15,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
     totalCh: 1,
     lang: null,
     isNew: null,
+    oktWm: null,
     link: ""
   });
   const [isModal, setIsModal] = useState(false);
@@ -72,6 +73,13 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
     }))
   }
 
+  const handlerSelectWmOkt = (event, newValue) => {
+    setIsFormData((prevFormData) => ({
+      ...prevFormData,
+      oktWm: newValue,
+    }));
+  };
+
   const handleSubmit = () => {
     setIsLoadingManwha(true);
     const storedToken = localStorage.getItem('loginState');
@@ -102,6 +110,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                 totalCh: 1,
                 lang: null,
                 isNew: null,
+                oktWm: null,
                 link: ""
               }));
               setIsLoadingManwha(false);
@@ -173,8 +182,8 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
             >
               <Grid
                 item="true"
-                md={4}
-                xs={4}
+                md={6}
+                xs={6}
               >
                 <FormLabel
                   sx={{
@@ -198,8 +207,8 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
 
               <Grid
                 item="true"
-                md={4}
-                xs={4}
+                md={6}
+                xs={6}
               >
                 <FormLabel
                   sx={{
@@ -228,8 +237,8 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
 
               <Grid
                 item="true"
-                md={4}
-                xs={4}
+                md={6}
+                xs={6}
               >
                 <FormLabel
                   sx={{
@@ -248,6 +257,32 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                   >
                     <Option value={1}>Yes</Option>
                     <Option value="0">No</Option>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid
+                item="true"
+                md={6}
+                xs={6}
+              >
+                <FormLabel
+                  sx={{
+                    color: '#ffffff'
+                  }}
+                >
+                  <h4>OKT WM?</h4>
+                </FormLabel>
+                <FormControl sx={{ marginTop: -1 }}>
+                  <Select
+                    placeholder="Choose one..."
+                    name="oktWm"
+                    variant="soft"
+                    value={isFormData.oktWm}
+                    onChange={handlerSelectWmOkt}
+                  >
+                    <Option value="0">NO WM</Option>
+                    <Option value={1}>WM OKT</Option>
                   </Select>
                 </FormControl>
               </Grid>

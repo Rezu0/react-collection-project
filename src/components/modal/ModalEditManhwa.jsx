@@ -16,7 +16,8 @@ function ModalEditManhwa({
     link: "",
     totalCh: "",
     lang: "",
-    isNew: ""
+    isNew: "",
+    oktWm: "",
   });
   const [isLoadingButton, setIsLoadingButton] = useState(false);
 
@@ -26,7 +27,8 @@ function ModalEditManhwa({
       link: "",
       totalCh: "",
       lang: "",
-      isNew: ""
+      isNew: "",
+      oktWm: "",
     });
   }, [isDataModal]);
 
@@ -59,6 +61,13 @@ function ModalEditManhwa({
     }));
   };
 
+  const handlerSeletOktWm = (event, newValue) => {
+    setIsEditData((prevFormData) => ({
+      ...prevFormData,
+      oktWm: newValue || ""
+    }));
+  };
+
   const handleClickEdit = () => {
     setIsLoadingButton(true);
     const storedToken = localStorage.getItem('loginState');
@@ -74,7 +83,8 @@ function ModalEditManhwa({
       link: isEditData?.link,
       totalCh: isEditData?.totalCh,
       lang: isEditData?.lang,
-      isNew: isEditData?.isNew
+      isNew: isEditData?.isNew,
+      oktWm: isEditData?.oktWm,
     });
 
     const optionsEdit = {
@@ -127,7 +137,7 @@ function ModalEditManhwa({
           maxWidth: 700,
           borderRadius: 'md',
           boxShadow: 'lg',
-          height: 'auto'
+          height: 'auto',
         }}
       >
         <ModalClose variant="plain" sx={{ m: 1 }} />
@@ -161,11 +171,11 @@ function ModalEditManhwa({
           </FormControl>
 
           <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-            <Grid xs={4} md={4}>
+            <Grid item="true" xs={6} md={6}>
               <FormLabel>
                 <h3>Total Ch</h3>
               </FormLabel>
-              <FormControl>
+              <FormControl sx={{ width: '100%' }}>
                 <Input
                   type="number"
                   name="totalCh"
@@ -174,50 +184,64 @@ function ModalEditManhwa({
                   value={isEditData?.totalCh || ""}
                   autoComplete="Total Chapter"
                   onChange={handleInputChange}
-                  sx={{ width: '90%' }}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={4} md={4}>
+            <Grid item="true" xs={6} md={6}>
               <FormLabel>
                 <h3>Language</h3>
               </FormLabel>
-              <FormControl>
+              <FormControl sx={{ width: '100%' }}>
                 <Select
                   placeholder="Choose one..."
                   name="lang"
                   variant="soft"
                   value={isEditData?.lang || ""}
                   onChange={handleSelectLang}
-                  sx={{ width: '200%' }}
                 >
                   {optionsLang.map((lang) => (
-                    <Option key={lang.value} value={lang.value} sx={{ zIndex: '10' }}>
+                    <Option key={lang.value} value={lang.value}>
                       {lang.text}
                     </Option>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={4} md={4}>
+            <Grid item="true" xs={6} md={6}>
               <FormLabel>
                 <h3>Is New?</h3>
               </FormLabel>
-              <FormControl>
+              <FormControl sx={{ width: '100%' }}>
                 <Select
                   placeholder="Choose one..."
                   name="isNew"
                   variant="soft"
                   value={isEditData?.isNew || ""}
                   onChange={handleSelectIsNew}
-                  sx={{ width: '250%' }}
                 >
                   <Option value={1}>Yes</Option>
                   <Option value="0">No</Option>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid xs={12} md={12}>
+            <Grid item="true" xs={6} md={6}>
+              <FormLabel>
+                <h3>OKT WM?</h3>
+              </FormLabel>
+              <FormControl sx={{ width: '100%' }}>
+                <Select
+                  placeholder="Choose one..."
+                  name="oktWm"
+                  variant="soft"
+                  value={isEditData?.oktWm || ""}
+                  onChange={handlerSeletOktWm}
+                >
+                  <Option value="0">NO WM</Option>
+                  <Option value={1}>WM OKT</Option>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item="true" xs={12} md={12}>
               <Button
                 variant="solid"
                 startDecorator={<EditIcon />}
