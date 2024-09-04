@@ -38,6 +38,15 @@ export function isNew(isNew) {
   }
 }
 
+export function oktWm(data) {
+  switch (data) {
+    case 1:
+      return 'WM OKT';
+    case "0":
+      return 'NO WM';
+  }
+}
+
 export function showFormatDateReadable(date) {
   const options = {
     year: 'numeric',
