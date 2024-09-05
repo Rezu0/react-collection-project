@@ -152,7 +152,7 @@ function InputForDoujin({ isProfile, setIsProfile }) {
           </FormLabel>
           <FormControl>
             <Textarea
-              placeholder="Input your link Goodle drive, etc"
+              placeholder="Input your link Google drive, etc"
               variant="soft"
               autoComplete="Link"
               name="link"
