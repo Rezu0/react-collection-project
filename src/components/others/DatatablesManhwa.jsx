@@ -294,7 +294,17 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
   }
 
   const oktWmTemplate = (data) => {
-    const oktWmFunc = (oktWm(data.oktWm) === 'WM OKT') ? '#0f0f0f' : '#ff0000';
+    // const oktWmFunc = (oktWm(data.oktWm) === 'WM OKT') ? '#0f0f0f' : '#ff0000';
+    let oktWmFunc;
+
+    if (oktWm(data.oktWm) === 'WM OKT') {
+      oktWmFunc = '#0f0f0f';
+    } else if (oktWm(data.oktWm) === 'CLEAN OKT') {
+      oktWmFunc = '#9333ea';
+    } else {
+      oktWmFunc = '#ff0000';
+    }
+
     return (
       <Tag 
         className="mr-2"

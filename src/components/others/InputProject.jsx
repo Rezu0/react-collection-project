@@ -283,6 +283,7 @@ function InputProject({ isDivision, isProfile, setIsProfile }) {
                   >
                     <Option value="0">NO WM</Option>
                     <Option value={1}>WM OKT</Option>
+                    <Option value={2}>CLEAN WM OKT</Option>
                   </Select>
                 </FormControl>
               </Grid>
