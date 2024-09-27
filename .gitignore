@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+utils/config.json
 dist-ssr
 *.local
 project-collection.rar
