@@ -243,7 +243,8 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
         className="mr-2"
         value={oktWm(data.oktWm)}
         style={{
-          backgroundColor: oktWmFunc
+          backgroundColor: oktWmFunc,
+          textAlign: 'center'
         }}
       />
     )
@@ -337,8 +338,8 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
                     loading: false,
                     id: null
                   }));
-                  toast.success(result.message);
-                }, 2000);
+                  toast.success(result.message, { autoClose: 500 });
+                }, 200);
               }
             }).catch((err) => {
               setIsLoading(() => ({
@@ -539,6 +540,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             field="oktWm"
             header="NO WM/WM OKT"
+            sortable
             body={oktWmTemplate}
             style={{
               width: '10%',
@@ -552,7 +554,9 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           />
 
           <Column 
+            field="approved"
             header="Action"
+            sortable
             body={rowActionTemplate}
           />
         </DataTable>

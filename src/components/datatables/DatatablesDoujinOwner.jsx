@@ -485,7 +485,9 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
           />
 
           <Column 
+            field="approved"
             header="Action"
+            sortable
             body={rowActionTemplate}
             style={{
               width: '15%',
