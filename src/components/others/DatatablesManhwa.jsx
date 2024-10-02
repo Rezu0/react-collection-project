@@ -251,6 +251,10 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                         tags.push("#OKT");
                       }
 
+                      if (data?.oktWm === 2) {
+                        tags.push('#CLEAR');
+                      }
+
                       tags.push(`#${data?.title}`);
                       tags.push(`#${languageProject(data?.lang)}`);
                       tags.push(`#${data?.totalCh} Chapter`);
