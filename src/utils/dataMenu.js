@@ -45,7 +45,7 @@ export function oktWm(data) {
     case 2:
       return 'CLEAN OKT'
     case "0":
-      return 'NO WM';
+      return 'NO WM OKT';
   }
 }
 
@@ -159,26 +159,53 @@ export function calculateDoujin(lang, totalPage) {
   return totalPage * doujinJP;
 }
 
-export function calculateManhwa(lang, totalCh, isNew) {
-  const manhwaNewEng = 15000;
-  const manhwaNewRaw = 20000;
-  const manhwaEng = 10000;
-  const manhwaRaw = 15000;
-
+export function calculateManhwa(lang, totalCh, isNew, clearWm) {
+  const manhwaNewKor = 30000;
+  const manhwaNewEng = 20000;
+  const manhwaNewSpa = 25000;
+  const manhwaKor = 25000;
+  const manhwaEng = 15000;
+  const manhwaSpa = 20000;
+  const manhwaClear = 5000;
+  
   if (lang === 'eng') {
     if (isNew == 1) {
-      return totalCh * manhwaNewEng;
+      const saldo = manhwaNewEng * totalCh;
+      return saldo;
+    } else {
+      const saldo = manhwaEng * totalCh;
+      return saldo;
     }
-
-    return totalCh * manhwaEng;
   }
 
-  if (lang === 'kor' || lang === 'spa' || lang === 'chn') {
-    if (isNew == 1) {
-      return totalCh * manhwaNewRaw;
+  if (lang === 'kor' || lang === 'chn') {
+    if (isNew == 1 && clearWm == 2) { 
+      const saldo = manhwaNewKor * totalCh + manhwaClear;
+      return saldo;
     }
 
-    return totalCh * manhwaRaw;
+    if (isNew == 0 && clearWm == 2) {
+      const saldo = manhwaKor * totalCh + manhwaClear;
+      return saldo;
+    }
+
+    if (isNew == 1 && clearWm != 2) {
+      const saldo = manhwaNewKor * totalCh;
+      return saldo;
+    } else {
+      const saldo = manhwaKor  * totalCh;
+      return saldo;
+    }
+  }
+
+  if (lang === 'spa') {
+    if (isNew == 1) {
+      const saldo = manhwaNewSpa * totalCh;
+      return saldo;
+    } else {
+      const saldo = manhwaSpa * totalCh;
+      return saldo;
+    }
   }
 }
 
