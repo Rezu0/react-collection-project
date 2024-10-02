@@ -778,7 +778,6 @@ function ComponentOwner({ isProfile, setIsProfile }) {
                       field="saldo"
                       header="Saldo"
                       footer="Saldo"
-                      sortable
                       body={rowSaldoStaffTemplate}
                       style={{
                         width: '20%'
