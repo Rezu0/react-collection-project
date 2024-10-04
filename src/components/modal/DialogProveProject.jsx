@@ -50,7 +50,7 @@ function DialogProveProject({
         return;
       }
       const totalSaldo = isProject?.projects.reduce((acc, item) => {
-        return acc + calculateManhwa(item.lang, item.totalCh, item.isNew)
+        return acc + calculateManhwa(item.lang, item.totalCh, item.isNew, item.oktWm)
       }, 0)
       setIsStateSaldo(totalSaldo)
     }
@@ -164,7 +164,7 @@ function DialogProveProject({
                       textAlign='center'
                       borderRight='1px solid #000000'
                     >
-                      {item.totalCh} Chapter ( {(item.isNew === 1) ? 'New' : 'Not New'} ) = {formatToCurrency(calculateManhwa(item.lang, item.totalCh, item.isNew))}
+                      {item.totalCh} Chapter ( {(item.isNew === 1) ? 'New' : 'Not New'} ) ( {(item.oktWm === 2) ? 'Clean WM' : 'Not Clean WM'} ) = {formatToCurrency(calculateManhwa(item.lang, item.totalCh, item.isNew, item.oktWm))}
                     </Grid>
                     <Grid
                       md={5}

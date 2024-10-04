@@ -228,13 +228,23 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
   }
 
   const oktWmTemplate = (data) => {
-    const oktWmFunc = (oktWm(data.oktWm) === 'WM OKT') ? '#0f0f0f' : '#ff0000';
+    let oktWmFunc;
+
+    if (oktWm(data.oktWm) === 'WM OKT') {
+      oktWmFunc = '#0f0f0f';
+    } else if (oktWm(data.oktWm) === 'CLEAN OKT') {
+      oktWmFunc = '#9333ea';
+    } else {
+      oktWmFunc = '#ff0000';
+    }
+
     return (
       <Tag 
         className="mr-2"
         value={oktWm(data.oktWm)}
         style={{
-          backgroundColor: oktWmFunc
+          backgroundColor: oktWmFunc,
+          textAlign: 'center'
         }}
       />
     )
@@ -328,8 +338,8 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
                     loading: false,
                     id: null
                   }));
-                  toast.success(result.message);
-                }, 2000);
+                  toast.success(result.message, { autoClose: 500 });
+                }, 200);
               }
             }).catch((err) => {
               setIsLoading(() => ({
@@ -530,6 +540,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             field="oktWm"
             header="NO WM/WM OKT"
+            sortable
             body={oktWmTemplate}
             style={{
               width: '10%',
@@ -543,8 +554,12 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           />
 
           <Column 
-            header="Action"
             field="approved"
+            header="Action"
+<<<<<<< HEAD
+            field="approved"
+=======
+>>>>>>> 9425f4c2b8c421bc2a756509a47c583367e837b9
             sortable
             body={rowActionTemplate}
           />
