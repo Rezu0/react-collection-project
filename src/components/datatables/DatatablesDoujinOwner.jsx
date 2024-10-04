@@ -203,8 +203,8 @@ function DatatablesDoujinOwner({ isProfile, setIsProfile }) {
                     loading: false,
                     id: null
                   }))
-                  toast.success(result.message);
-                }, 2000);
+                  toast.success(result.message, { autoClose: 500 });
+                }, 200);
               }
 
             }).catch((err) => {
