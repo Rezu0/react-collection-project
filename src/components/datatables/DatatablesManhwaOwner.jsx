@@ -556,10 +556,6 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           <Column 
             field="approved"
             header="Action"
-<<<<<<< HEAD
-            field="approved"
-=======
->>>>>>> 9425f4c2b8c421bc2a756509a47c583367e837b9
             sortable
             body={rowActionTemplate}
           />
