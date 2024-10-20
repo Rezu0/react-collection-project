@@ -472,7 +472,7 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
           removableSort
           paginator
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
-          tableStyle={{ minWidth: '60rem' }}
+          tableStyle={{ minWidth: '65rem' }}
           rows={10}
           filters={isFilter}
           onFilter={(e) => setIsFilter(e.filters)}
@@ -557,6 +557,9 @@ function DatatablesManhwaOwner({ isProfile, setIsProfile }) {
             field="approved"
             header="Action"
             sortable
+            style={{
+              textAlign: 'center',
+            }}
             body={rowActionTemplate}
           />
         </DataTable>

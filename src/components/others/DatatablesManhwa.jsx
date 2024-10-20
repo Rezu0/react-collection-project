@@ -418,7 +418,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                 filters={isFilter}
                 onFilter={(e) => setIsFilter(e.filters)}
                 rowsPerPageOptions={[5 ,10, 25, 50, 100]}
-                tableStyle={{ minWidth: '70rem' }}
+                tableStyle={{ minWidth: '78rem' }}
                 size="small"
                 scrollable
                 scrollHeight="1000px"
@@ -462,7 +462,7 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   field="totalCh"
                   header="Total Chapter"
                   style={{
-                    width: '10%',
+                    width: '5%',
                     fontSize: '14px',
                     textAlign: 'center'
                   }}
@@ -495,7 +495,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   body={oktWmTemplate}
                   style={{
                     width: '10%',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    textAlign: 'center'
                   }}
                 />
 
@@ -503,7 +504,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Link"
                   body={linkButtonTemplate}
                   style={{
-                    width: '12%'
+                    width: '10%',
+                    textAlign: 'center'
                   }}
                 />
 
@@ -511,7 +513,8 @@ function DatatablesManhwa({ isProfile, setIsProfile }) {
                   header="Action"
                   body={linkActionTemplate}
                   style={{
-                    width: '10%'
+                    width: '8%',
+                    textAlign: 'center'
                   }}
                 />
               </DataTable>
